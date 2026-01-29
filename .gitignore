@@ -43,3 +43,6 @@ tmp/
 credentials.txt
 secrets.txt
 .env
+.env.local
+config.json
+database_config.py

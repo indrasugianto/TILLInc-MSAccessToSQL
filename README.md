@@ -8,11 +8,14 @@ This repository contains the extracted content and migration tools for the TILL 
 
 **Database Type:** Hybrid MS Access frontend connected to Azure SQL Server backend
 
-## 🗄️ Azure SQL Connection
+## 🗄️ Azure SQL Database
 
 - **Server:** tillsqlserver.database.windows.net
+- **Database:** TILLDBWEB_Prod
 - **User:** tillsqladmin
-- **Database Type:** Azure SQL Database
+- **Type:** Azure SQL Database (Microsoft SQL Azure)
+- **Tables:** 284 tables with ~236,000 total rows
+- **Size:** ~2.6 GB
 
 ## 📂 Repository Structure
 
@@ -27,9 +30,16 @@ TILLInc-MSAccessToSQL/
 │       ├── queries/                        (166 SQL queries)
 │       ├── vba/                            (144 VBA modules)
 │       └── reports/                        (Documentation)
+├── assessment_reports/                     (Database assessment reports)
+├── db_connection.py                        (Azure SQL connection utility)
+├── assess_database.py                      (Database assessment tool)
 ├── extract_access_adox.py                  (Python extraction script)
 ├── extract_vba.vbs                         (VBScript VBA extraction)
 ├── extract_access_content.ps1              (PowerShell alternative)
+├── requirements.txt                        (Python dependencies)
+├── .env                                    (Database credentials - not in repo)
+├── .env.example                            (Credentials template)
+├── DATABASE_TOOLS_README.md                (Database tools documentation)
 └── README.md                               (This file)
 ```
 
@@ -52,14 +62,40 @@ TILLInc-MSAccessToSQL/
 
 ## 🚀 Getting Started
 
-### View Extracted Content
+### 1. View Extracted Content
 
 1. Navigate to `msaccess/extracted/`
 2. Start with `README.md` for overview
 3. Use `INDEX.md` for quick reference by functionality
 4. See `reports/COMPLETE_EXTRACTION_SUMMARY.md` for comprehensive analysis
 
-### Run Extraction Scripts (if needed)
+### 2. Access Azure SQL Database
+
+**Install Python Dependencies:**
+```bash
+pip install -r requirements.txt
+```
+
+**Test Database Connection:**
+```bash
+python db_connection.py
+```
+
+**Run Comprehensive Database Assessment:**
+```bash
+python assess_database.py
+```
+
+The assessment generates a detailed report analyzing:
+- All 284 tables with row counts and sizes
+- Views, stored procedures, and functions
+- Indexes and foreign key relationships
+- Triggers and database objects
+- Comparison with Access extraction
+
+**See:** [DATABASE_TOOLS_README.md](DATABASE_TOOLS_README.md) for complete documentation.
+
+### 3. Run Extraction Scripts (if needed)
 
 **Prerequisites:**
 - Python 3.x with `pywin32` package
