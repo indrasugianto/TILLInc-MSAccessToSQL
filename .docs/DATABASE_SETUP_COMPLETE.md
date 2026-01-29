@@ -118,9 +118,9 @@ AZURE_SQL_PASSWORD=Purpl3R31gn
 - `.env.example` - Credentials template (in git)
 
 ### Documentation
-- `DATABASE_TOOLS_README.md` - Complete tool documentation
-- `DATABASE_SETUP_COMPLETE.md` - This file
-- `GITHUB_SETUP_SUMMARY.md` - GitHub repo setup info
+- `.docs/DATABASE_TOOLS_README.md` - Complete tool documentation
+- `.docs/DATABASE_SETUP_COMPLETE.md` - This file
+- `.docs/GITHUB_SETUP_SUMMARY.md` - GitHub repo setup info
 
 ### Reports
 - `assessment_reports/database_assessment_20260129_162716.txt` - Full database analysis
@@ -281,11 +281,11 @@ With both Access and SQL documented:
 
 ## 📚 Documentation
 
-- **[README.md](README.md)** - Project overview
+- **[README.md](../README.md)** - Project overview
 - **[DATABASE_TOOLS_README.md](DATABASE_TOOLS_README.md)** - Complete tool documentation
 - **[DATABASE_SETUP_COMPLETE.md](DATABASE_SETUP_COMPLETE.md)** - This file
-- **[msaccess/extracted/INDEX.md](msaccess/extracted/INDEX.md)** - Access content guide
-- **[assessment_reports/](assessment_reports/)** - Database analysis reports
+- **[msaccess/extracted/INDEX.md](../msaccess/extracted/INDEX.md)** - Access content guide
+- **[assessment_reports/](../assessment_reports/)** - Database analysis reports
 
 ---
 

@@ -30,6 +30,10 @@ TILLInc-MSAccessToSQL/
 │       ├── queries/                        (166 SQL queries)
 │       ├── vba/                            (144 VBA modules)
 │       └── reports/                        (Documentation)
+├── .docs/                                  (Project documentation)
+│   ├── DATABASE_SETUP_COMPLETE.md          (Database setup summary)
+│   ├── DATABASE_TOOLS_README.md            (Database tools guide)
+│   └── GITHUB_SETUP_SUMMARY.md             (GitHub setup info)
 ├── assessment_reports/                     (Database assessment reports)
 ├── db_connection.py                        (Azure SQL connection utility)
 ├── assess_database.py                      (Database assessment tool)
@@ -39,7 +43,6 @@ TILLInc-MSAccessToSQL/
 ├── requirements.txt                        (Python dependencies)
 ├── .env                                    (Database credentials - not in repo)
 ├── .env.example                            (Credentials template)
-├── DATABASE_TOOLS_README.md                (Database tools documentation)
 └── README.md                               (This file)
 ```
 
@@ -93,7 +96,7 @@ The assessment generates a detailed report analyzing:
 - Triggers and database objects
 - Comparison with Access extraction
 
-**See:** [DATABASE_TOOLS_README.md](DATABASE_TOOLS_README.md) for complete documentation.
+**See:** [DATABASE_TOOLS_README.md](.docs/DATABASE_TOOLS_README.md) for complete documentation.
 
 ### 3. Run Extraction Scripts (if needed)
 
