@@ -1,0 +1,76 @@
+Table Name: qrytblLocations
+Table Type: VIEW
+Column Count: 69
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - ABI: Type=11, Size=2
+  - Address: Type=202, Size=50
+  - AddressValidated: Type=11, Size=2
+  - City: Type=202, Size=25
+  - CityTown: Type=202, Size=50
+  - Cluster: Type=2, Size=0
+  - Comments: Type=203, Size=0
+  - CommmunityRNName: Type=202, Size=40
+  - CommunityRNIndexedName: Type=202, Size=160
+  - CostCenter: Type=202, Size=4
+  - County: Type=202, Size=20
+  - DAYAllPlansReviewedByStaffBefore: Type=7, Size=0
+  - DAYQtrlySafetyChecklistDueBy: Type=7, Size=0
+  - DAYStaffTrainedInPrivacyBefore: Type=7, Size=0
+  - DDSArea: Type=202, Size=40
+  - DDSRegion: Type=202, Size=20
+  - Department: Type=202, Size=30
+  - DID: Type=3, Size=0
+  - EmailAddress: Type=202, Size=50
+  - FaxEmailAddress: Type=202, Size=50
+  - FaxNumber: Type=202, Size=15
+  - FireSafetyOfficer: Type=202, Size=50
+  - FlagForDeletion: Type=11, Size=2
+  - FSOTrainsIndividualsBefore: Type=7, Size=0
+  - FSOTrainsStaffBefore: Type=7, Size=0
+  - GPName: Type=202, Size=10
+  - HousePlansReviewedByStaffBefore: Type=7, Size=0
+  - HouseSafetyPlanExpires: Type=7, Size=0
+  - HROTrainsIndividualsBefore: Type=7, Size=0
+  - HROTrainsStaffBefore: Type=7, Size=0
+  - HumanRightsOfficer: Type=202, Size=50
+  - LastVehicleChecklistCompleted: Type=7, Size=0
+  - Leader: Type=11, Size=2
+  - LocationGUID: Type=72, Size=0
+  - LocationName: Type=202, Size=80
+  - LOTR: Type=11, Size=2
+  - LPN1IndexedName: Type=202, Size=160
+  - LPN1Name: Type=202, Size=40
+  - LPN2IndexedName: Type=202, Size=160
+  - LPN2Name: Type=202, Size=40
+  - ManagerLogonID: Type=202, Size=40
+  - MAPChecklistCompleted: Type=7, Size=0
+  - MostRecentAsleepFireDrill: Type=7, Size=0
+  - NextRecentAsleepFireDrill: Type=7, Size=0
+  - NumClients: Type=2, Size=0
+  - PhoneNumber: Type=202, Size=15
+  - RecordAddedBy: Type=202, Size=128
+  - RecordAddedDate: Type=202, Size=19
+  - ReportExpirations: Type=11, Size=2
+  - ResCapacity: Type=2, Size=0
+  - ResettlementCityTown: Type=202, Size=50
+  - ResettlementLocation: Type=202, Size=80
+  - ResTILLOwned: Type=11, Size=2
+  - SpeedDial: Type=202, Size=4
+  - SSMA_TimeStamp: Type=204, Size=8
+  - StaffPrimaryContactFirstName: Type=202, Size=25
+  - StaffPrimaryContactIndexedName: Type=202, Size=160
+  - StaffPrimaryContactLastName: Type=202, Size=25
+  - StaffPrimaryContactMiddleInitial: Type=202, Size=1
+  - StaffSecondaryContactFirstName: Type=202, Size=25
+  - StaffSecondaryContactIndexedName: Type=202, Size=160
+  - StaffSecondaryContactLastName: Type=202, Size=25
+  - StaffSecondaryContactMiddleInitial: Type=202, Size=1
+  - StaffTertiaryContactFirstName: Type=202, Size=25
+  - StaffTertiaryContactIndexedName: Type=202, Size=160
+  - StaffTertiaryContactLastName: Type=202, Size=25
+  - StaffTertiaryContactMiddleInitial: Type=202, Size=1
+  - State: Type=202, Size=2
+  - ZIP: Type=202, Size=10

@@ -1,0 +1,15 @@
+Table Name: qryClientGovernmentAccounts
+Table Type: VIEW
+Column Count: 8
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - DateOfBirth: Type=202, Size=10
+  - FirstName: Type=202, Size=25
+  - FoodStampsCardNumber: Type=3, Size=0
+  - LastName: Type=202, Size=80
+  - MedicaidNumber: Type=202, Size=25
+  - MedicareNumber: Type=202, Size=25
+  - ResLocation: Type=202, Size=60
+  - SocialSecurityNumber: Type=202, Size=11

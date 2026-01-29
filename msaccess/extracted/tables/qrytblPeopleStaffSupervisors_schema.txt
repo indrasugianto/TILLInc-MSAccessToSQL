@@ -1,0 +1,16 @@
+Table Name: qrytblPeopleStaffSupervisors
+Table Type: VIEW
+Column Count: 9
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - FIRSTNAME: Type=202, Size=25
+  - INDEXEDNAME: Type=202, Size=160
+  - LASTNAME: Type=202, Size=25
+  - LOCATION: Type=202, Size=60
+  - PeopleGUID: Type=72, Size=0
+  - STAFFCOUNT: Type=3, Size=0
+  - SUPEMPLID: Type=202, Size=15
+  - SUPERVISORCODE_I: Type=202, Size=8
+  - SUPERVISORNAME: Type=202, Size=40

@@ -1,0 +1,74 @@
+Table Name: tblLocationsDedhamManagers
+Table Type: TABLE
+Column Count: 67
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - ABI: Type=11, Size=2
+  - Address: Type=202, Size=50
+  - AddressValidated: Type=11, Size=2
+  - City: Type=202, Size=25
+  - CityTown: Type=202, Size=50
+  - Cluster: Type=2, Size=0
+  - Comments: Type=203, Size=0
+  - CommmunityRNName: Type=202, Size=40
+  - CommunityRNIndexedName: Type=202, Size=160
+  - CostCenter: Type=202, Size=4
+  - County: Type=202, Size=20
+  - DAYAllPlansReviewedByStaffBefore: Type=202, Size=10
+  - DAYQtrlySafetyChecklistDueBy: Type=202, Size=10
+  - DAYStaffTrainedInPrivacyBefore: Type=202, Size=10
+  - DDSArea: Type=202, Size=40
+  - DDSRegion: Type=202, Size=20
+  - Department: Type=202, Size=30
+  - DID: Type=3, Size=0
+  - EmailAddress: Type=202, Size=50
+  - FaxEmailAddress: Type=202, Size=255
+  - FaxNumber: Type=202, Size=15
+  - FireSafetyOfficer: Type=202, Size=50
+  - FSOTrainsIndividualsBefore: Type=202, Size=10
+  - FSOTrainsStaffBefore: Type=202, Size=10
+  - GPName: Type=202, Size=10
+  - HousePlansReviewedByStaffBefore: Type=202, Size=10
+  - HouseSafetyPlanExpires: Type=202, Size=10
+  - HROTrainsIndividualsBefore: Type=202, Size=10
+  - HROTrainsStaffBefore: Type=202, Size=10
+  - HumanRightsOfficer: Type=202, Size=50
+  - LastVehicleChecklistCompleted: Type=202, Size=10
+  - Leader: Type=11, Size=2
+  - LocationName: Type=202, Size=80
+  - LOTR: Type=11, Size=2
+  - LPN1IndexedName: Type=202, Size=160
+  - LPN1Name: Type=202, Size=40
+  - LPN2IndexedName: Type=202, Size=160
+  - LPN2Name: Type=202, Size=40
+  - ManagerLogonID: Type=202, Size=40
+  - MAPChecklistCompleted: Type=202, Size=10
+  - MostRecentAsleepFireDrill: Type=202, Size=10
+  - NextRecentAsleepFireDrill: Type=202, Size=10
+  - NumClients: Type=2, Size=0
+  - PhoneNumber: Type=202, Size=15
+  - RecordAddedBy: Type=202, Size=20
+  - RecordAddedDate: Type=202, Size=19
+  - ReportExpirations: Type=11, Size=2
+  - ResCapacity: Type=2, Size=0
+  - ResettlementCityTown: Type=202, Size=50
+  - ResettlementLocation: Type=202, Size=80
+  - RESTILLOwned: Type=11, Size=2
+  - SpeedDial: Type=3, Size=0
+  - SSMA_TimeStamp: Type=204, Size=8
+  - StaffPrimaryContactFirstName: Type=202, Size=25
+  - StaffPrimaryContactIndexedName: Type=202, Size=160
+  - StaffPrimaryContactLastName: Type=202, Size=25
+  - StaffPrimaryContactMiddleInitial: Type=202, Size=1
+  - StaffSecondaryContactFirstName: Type=202, Size=25
+  - StaffSecondaryContactIndexedName: Type=202, Size=160
+  - StaffSecondaryContactLastName: Type=202, Size=25
+  - StaffSecondaryContactMiddleInitial: Type=202, Size=1
+  - StaffTertiaryContactFirstName: Type=202, Size=25
+  - StaffTertiaryContactIndexedName: Type=202, Size=160
+  - StaffTertiaryContactLastName: Type=202, Size=25
+  - StaffTertiaryContactMiddleInitial: Type=202, Size=1
+  - State: Type=202, Size=2
+  - ZIP: Type=202, Size=10

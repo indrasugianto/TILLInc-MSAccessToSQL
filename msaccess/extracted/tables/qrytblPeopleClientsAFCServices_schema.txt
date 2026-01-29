@@ -1,0 +1,23 @@
+Table Name: qrytblPeopleClientsAFCServices
+Table Type: VIEW
+Column Count: 16
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - ActivityCode: Type=202, Size=6
+  - ActivityCode2: Type=202, Size=6
+  - CaseManager: Type=202, Size=50
+  - ContractNumber: Type=202, Size=25
+  - ContractNumber2: Type=202, Size=25
+  - DateInactive: Type=202, Size=10
+  - EndDate: Type=202, Size=10
+  - Inactive: Type=11, Size=2
+  - IndexedName: Type=202, Size=160
+  - PeopleGUID: Type=72, Size=0
+  - Portion: Type=6, Size=0
+  - RecordAddedBy: Type=202, Size=128
+  - RecordAddedDate: Type=202, Size=10
+  - SSMA_TimeStamp: Type=204, Size=8
+  - StartDate: Type=202, Size=10
+  - TerminationReason: Type=202, Size=25

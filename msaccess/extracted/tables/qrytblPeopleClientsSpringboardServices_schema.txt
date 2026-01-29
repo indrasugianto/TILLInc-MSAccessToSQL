@@ -1,0 +1,23 @@
+Table Name: qrytblPeopleClientsSpringboardServices
+Table Type: VIEW
+Column Count: 16
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - Age: Type=3, Size=0
+  - BeginBillingDate: Type=202, Size=10
+  - CustomerID: Type=3, Size=0
+  - DateInactive: Type=202, Size=10
+  - DateJoined: Type=202, Size=10
+  - DateTerminated: Type=202, Size=10
+  - GroupCode: Type=202, Size=2
+  - Inactive: Type=11, Size=2
+  - IndexedName: Type=202, Size=160
+  - Leader: Type=202, Size=40
+  - LeaderIndexedName: Type=202, Size=160
+  - PeopleGUID: Type=72, Size=0
+  - ReasonForTermination: Type=203, Size=0
+  - RecordAddedBy: Type=202, Size=128
+  - RecordAddedDate: Type=202, Size=10
+  - SSMA_TimeStamp: Type=204, Size=8

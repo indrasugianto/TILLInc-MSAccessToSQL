@@ -1,0 +1,22 @@
+Table Name: qryTILLLocations
+Table Type: VIEW
+Column Count: 15
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - ABI: Type=11, Size=2
+  - Address: Type=202, Size=50
+  - City: Type=202, Size=25
+  - CityTown: Type=202, Size=50
+  - Cluster: Type=2, Size=0
+  - CostCenter: Type=202, Size=4
+  - County: Type=202, Size=20
+  - Department: Type=202, Size=30
+  - LocationName: Type=202, Size=80
+  - NumClients: Type=2, Size=0
+  - PhoneNumber: Type=202, Size=15
+  - ResCapacity: Type=2, Size=0
+  - ResTILLOwned: Type=11, Size=2
+  - State: Type=202, Size=2
+  - ZIP: Type=202, Size=10

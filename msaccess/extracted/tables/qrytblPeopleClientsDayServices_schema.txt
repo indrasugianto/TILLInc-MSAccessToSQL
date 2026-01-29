@@ -1,0 +1,58 @@
+Table Name: qrytblPeopleClientsDayServices
+Table Type: VIEW
+Column Count: 51
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - ActivityCode: Type=202, Size=6
+  - ActivityCode2: Type=202, Size=6
+  - Annual: Type=6, Size=0
+  - CityTown: Type=202, Size=50
+  - ContractNumber: Type=202, Size=25
+  - ContractNumber2: Type=202, Size=25
+  - DateInactive: Type=202, Size=10
+  - DMRAnnual: Type=6, Size=0
+  - DMRWrapHours: Type=5, Size=0
+  - EndDate: Type=202, Size=10
+  - Funding: Type=202, Size=25
+  - ICD10Code: Type=202, Size=8
+  - Inactive: Type=11, Size=2
+  - IndexedName: Type=202, Size=160
+  - IntensityLevel: Type=202, Size=1
+  - LevelUpdatedWhen: Type=202, Size=10
+  - LevelUpdatedWho: Type=202, Size=30
+  - LocationName: Type=202, Size=80
+  - MassHealthServiceLevel: Type=202, Size=25
+  - MCBAmount: Type=6, Size=0
+  - MedicaidAnnual: Type=6, Size=0
+  - MedicaidRate: Type=6, Size=0
+  - MMARSLine: Type=2, Size=0
+  - MRCAmount: Type=6, Size=0
+  - OtherFundingAmount: Type=6, Size=0
+  - PeopleGUID: Type=72, Size=0
+  - Profile: Type=3, Size=0
+  - Rate: Type=6, Size=0
+  - RecordAddedBy: Type=202, Size=128
+  - RecordAddedDate: Type=202, Size=10
+  - ScoreAggression: Type=2, Size=0
+  - ScoreAuditory: Type=2, Size=0
+  - ScoreCommunication: Type=2, Size=0
+  - ScoreEating: Type=2, Size=0
+  - ScoreHyperactivity: Type=2, Size=0
+  - ScoreLearning: Type=2, Size=0
+  - ScoreMedical: Type=2, Size=0
+  - ScoreMobility: Type=2, Size=0
+  - ScoreNoncompliance: Type=2, Size=0
+  - ScoreSelfInjury: Type=2, Size=0
+  - ScoreSocial: Type=2, Size=0
+  - ScoresUpdatedWhen: Type=202, Size=10
+  - ScoresUpdatedWho: Type=202, Size=30
+  - ScoreToileting: Type=2, Size=0
+  - ScoreTotal: Type=2, Size=0
+  - ScoreVision: Type=2, Size=0
+  - Severity: Type=202, Size=4
+  - SSMA_TimeStamp: Type=204, Size=8
+  - StartDate: Type=202, Size=10
+  - STMBillingNumber: Type=3, Size=0
+  - TerminationReason: Type=202, Size=25

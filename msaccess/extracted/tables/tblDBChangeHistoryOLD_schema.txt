@@ -1,0 +1,10 @@
+Table Name: tblDBChangeHistoryOLD
+Table Type: TABLE
+Column Count: 3
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - Changes: Type=203, Size=0
+  - Date: Type=7, Size=0
+  - Version: Type=202, Size=12

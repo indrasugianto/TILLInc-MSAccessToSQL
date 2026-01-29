@@ -1,0 +1,34 @@
+Table Name: qryAutismIndividualsAndFamilyForDDS
+Table Type: VIEW
+Column Count: 27
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - ClientAge: Type=3, Size=0
+  - ClientDateOfBirth: Type=202, Size=10
+  - ClientDiagnosis: Type=203, Size=0
+  - ClientEmailAddress: Type=202, Size=60
+  - ClientFirstName: Type=202, Size=25
+  - ClientGender: Type=202, Size=1
+  - ClientGeneralDiagnosis: Type=202, Size=40
+  - ClientHomePhone: Type=202, Size=15
+  - ClientLastName: Type=202, Size=80
+  - ClientMiddleInitial: Type=202, Size=1
+  - ClientMobilePhone: Type=202, Size=15
+  - ClientPhysicalAddress: Type=202, Size=50
+  - ClientPhysicalCity: Type=202, Size=25
+  - ClientPhysicalState: Type=202, Size=2
+  - ClientPhysicalZIP: Type=202, Size=10
+  - ClientWorkPhone: Type=202, Size=15
+  - FamilyEmailAddress: Type=202, Size=60
+  - FamilyFirstName: Type=202, Size=25
+  - FamilyHomePhone: Type=202, Size=15
+  - FamilyLastName: Type=202, Size=80
+  - FamilyMiddleInitial: Type=202, Size=1
+  - FamilyMobilePhone: Type=202, Size=15
+  - FamilyPhysicalAddress: Type=202, Size=50
+  - FamilyPhysicalCity: Type=202, Size=25
+  - FamilyPhysicalState: Type=202, Size=2
+  - FamilyPhysicalZIP: Type=202, Size=10
+  - FamilyWorkPhone: Type=202, Size=15

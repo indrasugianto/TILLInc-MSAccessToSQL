@@ -1,0 +1,7 @@
+-- Query Name: ~Ad-hoc Vocational
+-- Extracted: 2026-01-29 16:09:06 (ADO Method)
+
+SELECT tblPeople.IndexedName, tblPeople.Salutation, tblPeople.FirstName, tblPeople.LastName, tblPeople.MailingAddress, tblPeople.MailingCity, tblPeople.MailingState, tblPeople.MailingZIP
+FROM tblPeople INNER JOIN tblPeopleClientsVocationalServices ON tblPeople.IndexedName = tblPeopleClientsVocationalServices.IndexedName
+WHERE (((tblPeople.IsClientVocat)=True) AND ((tblPeople.IsDeceased)=False) AND ((tblPeopleClientsVocationalServices.Inactive)=False));
+

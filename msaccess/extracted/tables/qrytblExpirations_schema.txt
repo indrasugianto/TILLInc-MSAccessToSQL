@@ -1,0 +1,55 @@
+Table Name: qrytblExpirations
+Table Type: VIEW
+Column Count: 48
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - AdjustedStartDate: Type=202, Size=10
+  - AllSPDSignaturesReceived: Type=11, Size=2
+  - BackInjuryPrevention: Type=202, Size=10
+  - BBP: Type=202, Size=10
+  - CPR: Type=202, Size=10
+  - DateBMMAccessSigned: Type=202, Size=10
+  - DateBMMAccessSignedHRC: Type=202, Size=10
+  - DateBMMExpires: Type=202, Size=10
+  - DateConsentFormsSigned: Type=202, Size=10
+  - DateISP: Type=202, Size=10
+  - DateSignaturesDueBy: Type=202, Size=10
+  - DateSPDAuthExpires: Type=202, Size=10
+  - DAYAllPlansReviewedByStaffBefore: Type=202, Size=10
+  - DAYQtrlySafetyChecklistDueBy: Type=202, Size=10
+  - DAYStaffTrainedInPrivacyBefore: Type=202, Size=10
+  - DefensiveDriving: Type=202, Size=10
+  - DriversLicense: Type=202, Size=10
+  - EvalDueBy: Type=202, Size=10
+  - ExpirationGUID: Type=72, Size=0
+  - FireSafetyOfficer: Type=202, Size=50
+  - FirstAid: Type=202, Size=10
+  - FirstName: Type=202, Size=25
+  - FSOTrainsIndividualsBefore: Type=202, Size=10
+  - FSOTrainsStaffBefore: Type=202, Size=10
+  - HousePlansReviewedByStaffBefore: Type=202, Size=10
+  - HouseSafetyPlanExpires: Type=202, Size=10
+  - HROTrainsIndividualsBefore: Type=202, Size=10
+  - HROTrainsStaffBefore: Type=202, Size=10
+  - HumanRightsOfficer: Type=202, Size=50
+  - JobTitle: Type=202, Size=30
+  - LastName: Type=202, Size=25
+  - LastSupervision: Type=202, Size=10
+  - LastVehicleChecklistCompleted: Type=202, Size=10
+  - Location: Type=202, Size=75
+  - MAPCert: Type=202, Size=10
+  - MAPChecklistCompleted: Type=202, Size=10
+  - MostRecentAsleepFireDrill: Type=202, Size=10
+  - NextRecentAsleepFireDrill: Type=202, Size=10
+  - OnLeave: Type=11, Size=2
+  - PBS: Type=202, Size=10
+  - ProfessionalLicenses: Type=202, Size=10
+  - RecordType: Type=202, Size=6
+  - SafetyCares: Type=202, Size=10
+  - Supervisor: Type=202, Size=10
+  - TB: Type=202, Size=10
+  - ThreeMonthEvaluation: Type=11, Size=2
+  - WheelchairSafety: Type=202, Size=10
+  - WorkplaceViolence: Type=202, Size=10

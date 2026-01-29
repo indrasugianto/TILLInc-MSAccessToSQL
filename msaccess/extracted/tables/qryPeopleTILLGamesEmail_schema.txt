@@ -1,0 +1,12 @@
+Table Name: qryPeopleTILLGamesEmail
+Table Type: VIEW
+Column Count: 5
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - ClientName: Type=203, Size=0
+  - CLOLocation: Type=202, Size=60
+  - FamilyEmailAddress: Type=203, Size=0
+  - FamilyName: Type=203, Size=0
+  - ResLocation: Type=202, Size=60

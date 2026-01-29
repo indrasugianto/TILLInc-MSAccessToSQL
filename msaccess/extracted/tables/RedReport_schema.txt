@@ -1,0 +1,20 @@
+Table Name: RedReport
+Table Type: TABLE
+Column Count: 13
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - EMPID_I: Type=202, Size=8
+  - EXPIREDSKILL_I: Type=7, Size=0
+  - FRSTNAME: Type=202, Size=30
+  - LASTNAME: Type=202, Size=30
+  - LocationName: Type=202, Size=100
+  - OnLeave: Type=11, Size=2
+  - RedFlag: Type=11, Size=2
+  - Skill: Type=202, Size=25
+  - SKILLNUMBER_I: Type=3, Size=0
+  - StaffName: Type=202, Size=255
+  - SUPERVISORCODE_I: Type=202, Size=6
+  - SupervisorIndexedName: Type=202, Size=160
+  - SupervisorName: Type=202, Size=255

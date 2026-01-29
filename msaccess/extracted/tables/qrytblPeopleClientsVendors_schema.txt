@@ -1,0 +1,65 @@
+Table Name: qrytblPeopleClientsVendors
+Table Type: VIEW
+Column Count: 58
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - DayVendor: Type=202, Size=30
+  - DayVendorAddress: Type=202, Size=40
+  - DayVendorCity: Type=202, Size=25
+  - DayVendorLocation: Type=202, Size=50
+  - DayVendorPhoneNumber: Type=202, Size=15
+  - DayVendorState: Type=202, Size=2
+  - DayVendorZIP: Type=202, Size=10
+  - IndexedName: Type=202, Size=160
+  - LivingIndependently: Type=11, Size=2
+  - LivingWithParentOrGuardian: Type=11, Size=2
+  - OtherService1: Type=202, Size=25
+  - OtherService1Address: Type=202, Size=40
+  - OtherService1City: Type=202, Size=25
+  - OtherService1Fax: Type=202, Size=15
+  - OtherService1Name: Type=202, Size=50
+  - OtherService1Phone: Type=202, Size=15
+  - OtherService1State: Type=202, Size=2
+  - OtherService1ZIP: Type=202, Size=10
+  - OtherService2: Type=202, Size=25
+  - OtherService2Address: Type=202, Size=40
+  - OtherService2City: Type=202, Size=25
+  - OtherService2Fax: Type=202, Size=15
+  - OtherService2Name: Type=202, Size=50
+  - OtherService2Phone: Type=202, Size=15
+  - OtherService2State: Type=202, Size=2
+  - OtherService2ZIP: Type=202, Size=10
+  - OtherService3: Type=202, Size=25
+  - OtherService3Address: Type=202, Size=40
+  - OtherService3City: Type=202, Size=25
+  - OtherService3Fax: Type=202, Size=15
+  - OtherService3Name: Type=202, Size=50
+  - OtherService3Phone: Type=202, Size=15
+  - OtherService3State: Type=202, Size=2
+  - OtherService3ZIP: Type=202, Size=10
+  - PCPAddress: Type=202, Size=50
+  - PCPCity: Type=202, Size=25
+  - PCPEmailAddress: Type=202, Size=60
+  - PCPFaxNumber: Type=202, Size=15
+  - PCPHospitalAffiliation: Type=202, Size=50
+  - PCPName: Type=202, Size=50
+  - PCPNPI: Type=202, Size=10
+  - PCPOffice: Type=202, Size=50
+  - PCPPhoneNumber: Type=202, Size=15
+  - PCPState: Type=202, Size=2
+  - PCPZIP: Type=202, Size=10
+  - PeopleGUID: Type=72, Size=0
+  - RecordAddedBy: Type=202, Size=128
+  - RecordAddedDate: Type=202, Size=10
+  - RecordLastViewedBy: Type=202, Size=25
+  - RecordLastViewedDate: Type=202, Size=10
+  - ResidentialVendor: Type=202, Size=30
+  - ResidentialVendorPhoneNumber: Type=202, Size=15
+  - ResVendorAddress: Type=202, Size=40
+  - ResVendorCity: Type=202, Size=25
+  - ResVendorLocation: Type=202, Size=50
+  - ResVendorState: Type=202, Size=2
+  - ResVendorZIP: Type=202, Size=10
+  - SSMA_TimeStamp: Type=204, Size=8

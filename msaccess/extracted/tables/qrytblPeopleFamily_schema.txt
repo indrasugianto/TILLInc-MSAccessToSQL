@@ -1,0 +1,23 @@
+Table Name: qrytblPeopleFamily
+Table Type: VIEW
+Column Count: 16
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - ClientFirstName: Type=202, Size=25
+  - ClientIndexedName: Type=202, Size=160
+  - ClientLastName: Type=202, Size=25
+  - ClientMiddleInitial: Type=202, Size=1
+  - Guardian: Type=11, Size=2
+  - Inactive: Type=11, Size=2
+  - IndexedName: Type=202, Size=160
+  - PeopleFamilyGUID: Type=72, Size=0
+  - PeopleGUID: Type=72, Size=0
+  - PrimaryContact: Type=11, Size=2
+  - RecordAddedBy: Type=202, Size=128
+  - RecordAddedDate: Type=202, Size=10
+  - Relationship: Type=202, Size=30
+  - RepPayee: Type=11, Size=2
+  - SSMA_TimeStamp: Type=204, Size=8
+  - Surrogate: Type=11, Size=2

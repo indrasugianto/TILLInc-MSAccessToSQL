@@ -1,0 +1,30 @@
+Table Name: qrytblPeopleClientsAutismServices
+Table Type: VIEW
+Column Count: 23
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - Age: Type=5, Size=0
+  - AutismWaiverEndDate: Type=202, Size=10
+  - AutismWaiverStartDate: Type=202, Size=10
+  - Comments: Type=203, Size=0
+  - CurrentAutismWaiverClient: Type=11, Size=2
+  - DateInactive: Type=202, Size=10
+  - DateOfReferral: Type=202, Size=10
+  - DDSArea: Type=202, Size=50
+  - Diagnosis: Type=203, Size=0
+  - FormerAutismWaiverClient: Type=11, Size=2
+  - GeneralDiagnosis: Type=202, Size=40
+  - GeneralReferralSource: Type=202, Size=40
+  - Inactive: Type=11, Size=2
+  - IndexedName: Type=202, Size=160
+  - PeopleGUID: Type=72, Size=0
+  - ReasonForReferral: Type=202, Size=30
+  - RecordAddedBy: Type=202, Size=128
+  - RecordAddedDate: Type=202, Size=10
+  - ReferralSource: Type=202, Size=80
+  - SSMA_TimeStamp: Type=204, Size=8
+  - SupportBrokerFirstName: Type=202, Size=25
+  - SupportBrokerLastName: Type=202, Size=25
+  - SupportBrokerMiddleInitial: Type=202, Size=1

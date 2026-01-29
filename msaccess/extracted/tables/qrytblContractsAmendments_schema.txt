@@ -1,0 +1,31 @@
+Table Name: qrytblContractsAmendments
+Table Type: VIEW
+Column Count: 24
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - AmendedAmount: Type=6, Size=0
+  - AmendmentNumber: Type=3, Size=0
+  - AnnualizedAmount: Type=6, Size=0
+  - BillingBookNumber: Type=3, Size=0
+  - Comments: Type=203, Size=0
+  - ContractAmendmentGUID: Type=72, Size=0
+  - ContractBillingBookGUID: Type=72, Size=0
+  - ContractID: Type=202, Size=50
+  - DateApproved: Type=202, Size=10
+  - DateSubmitted: Type=202, Size=10
+  - DDSArea: Type=202, Size=60
+  - EndDate: Type=202, Size=10
+  - FY: Type=3, Size=0
+  - NewRate: Type=6, Size=0
+  - NumUnits: Type=5, Size=0
+  - Pending: Type=11, Size=2
+  - PendingAmount: Type=6, Size=0
+  - PendingUnits: Type=5, Size=0
+  - ProgramName: Type=202, Size=80
+  - PurposeReason: Type=203, Size=0
+  - RecordAddedBy: Type=202, Size=128
+  - RecordAddedDate: Type=202, Size=10
+  - SSMA_TimeStamp: Type=204, Size=8
+  - StartDate: Type=202, Size=10

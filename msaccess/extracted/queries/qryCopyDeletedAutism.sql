@@ -1,0 +1,8 @@
+-- Query Name: qryCopyDeletedAutism
+-- Extracted: 2026-01-29 16:09:05
+
+INSERT INTO tblDELETEDPeopleClientsAutismServices ( IndexedName, RecordDeletedDate, RecordDeletedBy, Age, DDSArea, DateOfReferral, ReasonForReferral, GeneralDiagnosis, Diagnosis, GeneralReferralSource, ReferralSource, SupportBrokerLastName, SupportBrokerFirstName, SupportBrokerMiddleInitial, CurrentAutismWaiverClient, AutismWaiverStartDate, AutismWaiverEndDate, FormerAutismWaiverClient, Comments, Inactive, DateInactive )
+SELECT tblPeopleClientsAutismServices.IndexedName, [Forms]![frmMainMenu]![TodaysDate] AS RecordDeletedDate, [Forms]![frmMainMenu]![UserName] AS RecordDeletedBy, tblPeopleClientsAutismServices.Age, tblPeopleClientsAutismServices.DDSArea, tblPeopleClientsAutismServices.DateOfReferral, tblPeopleClientsAutismServices.ReasonForReferral, tblPeopleClientsAutismServices.GeneralDiagnosis, tblPeopleClientsAutismServices.Diagnosis, tblPeopleClientsAutismServices.GeneralReferralSource, tblPeopleClientsAutismServices.ReferralSource, tblPeopleClientsAutismServices.SupportBrokerLastName, tblPeopleClientsAutismServices.SupportBrokerFirstName, tblPeopleClientsAutismServices.SupportBrokerMiddleInitial, tblPeopleClientsAutismServices.CurrentAutismWaiverClient, tblPeopleClientsAutismServices.AutismWaiverStartDate, tblPeopleClientsAutismServices.AutismWaiverEndDate, tblPeopleClientsAutismServices.FormerAutismWaiverClient, tblPeopleClientsAutismServices.Comments, tblPeopleClientsAutismServices.Inactive, tblPeopleClientsAutismServices.DateInactive
+FROM tblPeopleClientsAutismServices
+WHERE (((tblPeopleClientsAutismServices.IndexedName)=[Forms]![frmMainMenu]![RememberIndexedName]));
+

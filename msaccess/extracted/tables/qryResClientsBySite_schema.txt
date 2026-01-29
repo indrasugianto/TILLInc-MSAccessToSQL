@@ -1,0 +1,17 @@
+Table Name: qryResClientsBySite
+Table Type: VIEW
+Column Count: 10
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - CityTown: Type=202, Size=50
+  - Cluster: Type=2, Size=0
+  - FirstName: Type=202, Size=25
+  - LastName: Type=202, Size=80
+  - LocationName: Type=202, Size=80
+  - NumClients: Type=2, Size=0
+  - NumVacancies: Type=3, Size=0
+  - ResCapacity: Type=2, Size=0
+  - UsesWalker: Type=11, Size=2
+  - UsesWheelchair: Type=11, Size=2

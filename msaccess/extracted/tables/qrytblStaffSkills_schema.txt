@@ -1,0 +1,11 @@
+Table Name: qrytblStaffSkills
+Table Type: VIEW
+Column Count: 4
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - EMPID_I: Type=202, Size=16
+  - EXPIREDSKILL_I: Type=7, Size=0
+  - SKILLNUMBER_I: Type=3, Size=0
+  - SSMA_TimeStamp: Type=204, Size=8

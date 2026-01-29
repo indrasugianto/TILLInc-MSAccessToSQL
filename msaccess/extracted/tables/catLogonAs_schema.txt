@@ -1,0 +1,8 @@
+Table Name: catLogonAs
+Table Type: TABLE
+Column Count: 1
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - LogonAs: Type=202, Size=255

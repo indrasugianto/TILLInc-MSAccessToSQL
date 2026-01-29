@@ -1,0 +1,22 @@
+Table Name: qrytblStaffEvalsAndSupervisions
+Table Type: VIEW
+Column Count: 15
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - DeleteFlag: Type=11, Size=2
+  - Department: Type=202, Size=40
+  - EmployeeID: Type=202, Size=16
+  - EvalDueBy: Type=202, Size=10
+  - FirstName: Type=202, Size=40
+  - JobTitle: Type=202, Size=30
+  - LastName: Type=202, Size=40
+  - LastSupervision: Type=202, Size=10
+  - Loc: Type=202, Size=60
+  - Location: Type=202, Size=10
+  - Notes: Type=203, Size=0
+  - OnLeave: Type=11, Size=2
+  - SSMA_TimeStamp: Type=204, Size=8
+  - SupervisorCode: Type=202, Size=8
+  - ThreeMonthEval: Type=11, Size=2

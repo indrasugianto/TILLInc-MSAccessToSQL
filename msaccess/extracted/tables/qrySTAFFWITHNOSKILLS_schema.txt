@@ -1,0 +1,14 @@
+Table Name: qrySTAFFWITHNOSKILLS
+Table Type: VIEW
+Column Count: 7
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - DEPRTMNT: Type=202, Size=8
+  - DIVISIONCODE_I: Type=202, Size=8
+  - EMPLOYID: Type=202, Size=16
+  - FRSTNAME: Type=202, Size=40
+  - JOBTITLE: Type=202, Size=8
+  - LASTNAME: Type=202, Size=40
+  - SkillsCount: Type=3, Size=0

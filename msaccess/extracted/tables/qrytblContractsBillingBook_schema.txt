@@ -1,0 +1,55 @@
+Table Name: qrytblContractsBillingBook
+Table Type: VIEW
+Column Count: 48
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - 01Rate: Type=6, Size=0
+  - 01Units: Type=3, Size=0
+  - 02Rate: Type=6, Size=0
+  - 02Units: Type=3, Size=0
+  - 03Rate: Type=6, Size=0
+  - 03Units: Type=3, Size=0
+  - 04Rate: Type=6, Size=0
+  - 04Units: Type=3, Size=0
+  - 05Rate: Type=6, Size=0
+  - 05Units: Type=3, Size=0
+  - 06Rate: Type=6, Size=0
+  - 06Units: Type=3, Size=0
+  - 07Rate: Type=6, Size=0
+  - 07Units: Type=3, Size=0
+  - 08Rate: Type=6, Size=0
+  - 08Units: Type=3, Size=0
+  - 09Rate: Type=6, Size=0
+  - 09Units: Type=3, Size=0
+  - 10Rate: Type=6, Size=0
+  - 10Units: Type=3, Size=0
+  - 11Rate: Type=6, Size=0
+  - 11Units: Type=3, Size=0
+  - 12Rate: Type=6, Size=0
+  - 12Units: Type=3, Size=0
+  - AccountingStaff: Type=202, Size=50
+  - BIllingBookNumber: Type=3, Size=0
+  - BillingRate: Type=6, Size=0
+  - Comments: Type=203, Size=0
+  - ContractBillingBookGUID: Type=72, Size=0
+  - ContractGUID: Type=72, Size=0
+  - ContractID: Type=202, Size=50
+  - CostCenter: Type=202, Size=4
+  - DDSArea: Type=202, Size=60
+  - EndDate: Type=202, Size=10
+  - FundingSource: Type=202, Size=60
+  - FY: Type=3, Size=0
+  - InternalRate: Type=6, Size=0
+  - MaximumObligation: Type=6, Size=0
+  - MaximumObligationAsAmended: Type=6, Size=0
+  - NumberOfClients: Type=3, Size=0
+  - ProgramName: Type=202, Size=80
+  - RecordAddedBy: Type=202, Size=128
+  - RecordAddedDate: Type=202, Size=10
+  - SSMA_TimeStamp: Type=204, Size=8
+  - Staff: Type=202, Size=30
+  - StartDate: Type=202, Size=10
+  - Units: Type=3, Size=0
+  - UnitsAsAmended: Type=3, Size=0

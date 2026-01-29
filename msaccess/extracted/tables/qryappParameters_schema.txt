@@ -1,0 +1,10 @@
+Table Name: qryappParameters
+Table Type: VIEW
+Column Count: 3
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - ID: Type=3, Size=0
+  - ParameterName: Type=202, Size=60
+  - ParameterValue: Type=202, Size=255

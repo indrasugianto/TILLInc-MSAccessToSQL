@@ -1,0 +1,7 @@
+-- Query Name: qryJamesExport
+-- Extracted: 2026-01-29 16:09:06 (ADO Method)
+
+SELECT tblContracts.ContractID, tblContractsBillingBook.BIllingBookNumber, tblContractsBillingBook.ProgramName, tblContractsBillingBook.CostCenter, tblContractsBillingBook.MaximumObligation, tblContractsBillingBook.MaximumObligationAsAmended, tblContractsBillingBook.Units, tblContractsBillingBook.UnitsAsAmended, tblContractsBillingBook.BillingRate, tblContractsBillingBook.NumberOfClients, tblContractsBillingBook.InternalRate, tblContractsBillingBook.FundingSource, tblContractsBillingBook.DDSArea, tblContractsBillingBook.Staff
+FROM tblContracts INNER JOIN tblContractsBillingBook ON (tblContracts.ContractID = tblContractsBillingBook.ContractID) AND (tblContracts.FY = tblContractsBillingBook.FY)
+WHERE (((tblContracts.FY)=2022));
+

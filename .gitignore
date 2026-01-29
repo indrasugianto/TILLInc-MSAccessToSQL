@@ -1,0 +1,45 @@
+# MS Access Database Files (large binary files)
+*.accdb
+*.mdb
+*.accde
+*.laccdb
+
+# Backup files
+*.bak
+*~
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+dist/
+*.egg-info/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+temp/
+tmp/
+
+# Sensitive information (if any credentials are in separate files)
+credentials.txt
+secrets.txt
+.env

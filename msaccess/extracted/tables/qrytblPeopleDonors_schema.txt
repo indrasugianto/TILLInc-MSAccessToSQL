@@ -1,0 +1,33 @@
+Table Name: qrytblPeopleDonors
+Table Type: VIEW
+Column Count: 26
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - Amount: Type=6, Size=0
+  - AppealCode: Type=202, Size=6
+  - DateOfDonation: Type=202, Size=10
+  - DateReceived: Type=202, Size=10
+  - DateThankYou: Type=202, Size=10
+  - Description: Type=202, Size=100
+  - DonationFrom: Type=202, Size=50
+  - DonationFrom1FirstName: Type=202, Size=35
+  - DonationFrom1LastName: Type=202, Size=35
+  - DonationFrom1Salutation: Type=202, Size=4
+  - DonationFrom2FirstName: Type=202, Size=35
+  - DonationFrom2LastName: Type=202, Size=35
+  - DonationFrom2Salutation: Type=202, Size=4
+  - DonationFromCompany: Type=202, Size=50
+  - DonationType: Type=202, Size=10
+  - Inactive: Type=11, Size=2
+  - Index: Type=3, Size=0
+  - IndexedName: Type=202, Size=160
+  - IsGrant: Type=11, Size=2
+  - IsRestricted: Type=11, Size=2
+  - PeopleDonorGUID: Type=72, Size=0
+  - PeopleGUID: Type=72, Size=0
+  - RecordAddedBy: Type=202, Size=128
+  - RecordAddedDate: Type=202, Size=10
+  - SolicitationType: Type=202, Size=40
+  - SSMA_TimeStamp: Type=204, Size=8

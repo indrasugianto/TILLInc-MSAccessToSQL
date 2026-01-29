@@ -1,0 +1,18 @@
+Table Name: qryJamesContracts
+Table Type: VIEW
+Column Count: 11
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - BIllingBookNumber: Type=3, Size=0
+  - BillingRate: Type=6, Size=0
+  - ContractID: Type=202, Size=50
+  - CostCenter: Type=202, Size=4
+  - FundingSource: Type=202, Size=60
+  - InternalRate: Type=6, Size=0
+  - MaximumObligation: Type=6, Size=0
+  - NumberOfClients: Type=3, Size=0
+  - ProgramName: Type=202, Size=80
+  - Staff: Type=202, Size=30
+  - Units: Type=3, Size=0

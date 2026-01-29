@@ -1,0 +1,15 @@
+Table Name: qryCensus
+Table Type: VIEW
+Column Count: 8
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - Address: Type=202, Size=50
+  - City: Type=202, Size=25
+  - CityTown: Type=202, Size=50
+  - County: Type=202, Size=20
+  - LocationName: Type=202, Size=80
+  - NumClients: Type=2, Size=0
+  - State: Type=202, Size=2
+  - ZIP: Type=202, Size=10

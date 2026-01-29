@@ -1,0 +1,54 @@
+Table Name: qrytblPeopleClientsCLOServices
+Table Type: VIEW
+Column Count: 47
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - ActivityCode: Type=202, Size=6
+  - ActivityCode2: Type=202, Size=6
+  - CityTown: Type=202, Size=50
+  - ClientContribution: Type=6, Size=0
+  - ContractNumber: Type=202, Size=25
+  - ContractNumber2: Type=202, Size=25
+  - DateInactive: Type=202, Size=10
+  - DateInspected: Type=202, Size=10
+  - DateLastRentIncrease: Type=202, Size=10
+  - EndDate: Type=202, Size=10
+  - Funding: Type=202, Size=30
+  - HousingAuthorityAddress: Type=202, Size=50
+  - HousingAuthorityCaseManager: Type=202, Size=40
+  - HousingAuthorityCity: Type=202, Size=25
+  - HousingAuthorityCurrentRent: Type=6, Size=0
+  - HousingAuthorityEmail: Type=202, Size=80
+  - HousingAuthorityFunds: Type=6, Size=0
+  - HousingAuthorityNextYearRent: Type=6, Size=0
+  - HousingAuthorityOffice: Type=202, Size=40
+  - HousingAuthorityPermissionLetter: Type=202, Size=10
+  - HousingAuthorityPhone: Type=202, Size=15
+  - HousingAuthorityPhoneExtension: Type=202, Size=8
+  - HousingAuthorityState: Type=202, Size=2
+  - HousingAuthorityWorkInProgress: Type=203, Size=0
+  - HousingAuthorityZIP: Type=202, Size=50
+  - Inactive: Type=11, Size=2
+  - IndexedName: Type=202, Size=160
+  - LeaseBegins: Type=202, Size=10
+  - LeaseEnds: Type=202, Size=10
+  - Location: Type=202, Size=80
+  - LPNHoursAtResidence: Type=5, Size=0
+  - PassFail: Type=202, Size=4
+  - PeopleGUID: Type=72, Size=0
+  - Portion: Type=6, Size=0
+  - RecertificationMonth: Type=202, Size=3
+  - RecordAddedBy: Type=202, Size=128
+  - RecordAddedDate: Type=202, Size=10
+  - ResidentialRate: Type=6, Size=0
+  - RNHoursAtResidence: Type=5, Size=0
+  - RoomAndBoard: Type=6, Size=0
+  - Section8: Type=11, Size=2
+  - Section8Review: Type=202, Size=10
+  - SSMA_TimeStamp: Type=204, Size=8
+  - StartDate: Type=202, Size=10
+  - TerminationReason: Type=202, Size=25
+  - WaitListSection8: Type=11, Size=2
+  - WaitListSection8Date: Type=202, Size=10

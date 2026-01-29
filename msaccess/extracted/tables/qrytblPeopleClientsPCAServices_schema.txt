@@ -1,0 +1,45 @@
+Table Name: qrytblPeopleClientsPCAServices
+Table Type: VIEW
+Column Count: 38
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - Age: Type=2, Size=0
+  - AnnualAssessment: Type=202, Size=60
+  - AnnualFormsSigned: Type=202, Size=15
+  - AnnualReminderSent: Type=202, Size=15
+  - ARPlusNumber: Type=202, Size=20
+  - Billing: Type=11, Size=2
+  - BillingCode: Type=202, Size=3
+  - Comment: Type=203, Size=0
+  - ConsumerNumber: Type=202, Size=20
+  - DateInactive: Type=202, Size=10
+  - DateOfServiceEnd: Type=202, Size=10
+  - DateOfServiceStart: Type=202, Size=10
+  - DayHoursApproved: Type=5, Size=0
+  - ICD10Code: Type=202, Size=8
+  - ICD9Code: Type=5, Size=0
+  - Inactive: Type=11, Size=2
+  - IndexedName: Type=202, Size=160
+  - IntakeApplicationReceived: Type=202, Size=15
+  - IntakeApprovedDate: Type=202, Size=15
+  - IntakeAssessment: Type=202, Size=60
+  - NightHoursApproved: Type=5, Size=0
+  - NoChange: Type=11, Size=2
+  - NurseNotes: Type=203, Size=0
+  - OtherHealthInsurance: Type=202, Size=50
+  - OtherHealthInsuranceContact: Type=202, Size=50
+  - OtherHealthInsurancePhone: Type=202, Size=15
+  - PANumber: Type=202, Size=15
+  - PeopleGUID: Type=72, Size=0
+  - PresentingDisability: Type=203, Size=0
+  - RecordAddedBy: Type=202, Size=128
+  - RecordAddedDate: Type=202, Size=10
+  - RNAssigned: Type=202, Size=30
+  - SkillsTrainerFirstName: Type=202, Size=25
+  - SkillsTrainerLastName: Type=202, Size=25
+  - SkillsTrainerMiddleInitial: Type=202, Size=1
+  - SSMA_TimeStamp: Type=204, Size=8
+  - Surrogate: Type=11, Size=2
+  - VacationHoursApproved: Type=202, Size=10

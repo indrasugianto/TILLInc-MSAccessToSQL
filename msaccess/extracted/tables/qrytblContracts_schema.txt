@@ -1,0 +1,27 @@
+Table Name: qrytblContracts
+Table Type: VIEW
+Column Count: 20
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - AccountingStaff: Type=202, Size=50
+  - ActivityCode: Type=3, Size=0
+  - ContractGUID: Type=72, Size=0
+  - ContractID: Type=202, Size=50
+  - EndDate: Type=202, Size=10
+  - FY: Type=3, Size=0
+  - GPNumber: Type=3, Size=0
+  - MaximumObligation: Type=6, Size=0
+  - MaximumObligationAsAmended: Type=6, Size=0
+  - Pending: Type=11, Size=2
+  - RecordAddedBy: Type=202, Size=128
+  - RecordAddedDate: Type=202, Size=10
+  - SSMA_TimeStamp: Type=204, Size=8
+  - StartDate: Type=202, Size=10
+  - State: Type=202, Size=2
+  - TotalClients: Type=3, Size=0
+  - TotalUnits: Type=3, Size=0
+  - TotalUnitsAsAmended: Type=3, Size=0
+  - UnitRate: Type=5, Size=0
+  - Units: Type=202, Size=50

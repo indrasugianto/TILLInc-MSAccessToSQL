@@ -1,0 +1,20 @@
+Table Name: qryDonations
+Table Type: VIEW
+Column Count: 13
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - Amount: Type=6, Size=0
+  - CompanyOrganization: Type=202, Size=100
+  - DateOfDonation: Type=202, Size=10
+  - DateofDonationNumeric: Type=7, Size=0
+  - Description: Type=202, Size=100
+  - DonationType: Type=202, Size=10
+  - FirstName: Type=202, Size=25
+  - Inactive: Type=11, Size=2
+  - IndexedName: Type=202, Size=160
+  - IsDeceased: Type=11, Size=2
+  - IsGrant: Type=11, Size=2
+  - IsRestricted: Type=11, Size=2
+  - LastName: Type=202, Size=80

@@ -1,0 +1,8 @@
+-- Query Name: qryCONINWORKS
+-- Extracted: 2026-01-29 16:09:05
+
+SELECT tblContracts.ContractID, tblContractsBillingBook.BIllingBookNumber, tblContracts.ActivityCode, tblContracts.GPNumber, tblContracts.State, tblContracts.UnitRate, tblContracts.Units AS ContractUnits, tblContracts.MaximumObligation AS ContractMaximumObligation, tblContracts.MaximumObligationAsAmended, tblContracts.TotalClients, tblContracts.TotalUnits, tblContracts.TotalUnitsAsAmended, tblContractsBillingBook.ProgramName, tblContractsBillingBook.CostCenter, tblContractsBillingBook.MaximumObligationAsAmended AS BillingBookMaximumObligation, tblContractsBillingBook.UnitsAsAmended AS BillingBookUnits, tblContractsBillingBook.BillingRate, tblContractsBillingBook.NumberOfClients, tblContractsBillingBook.InternalRate, tblContractsBillingBook.FundingSource, tblContractsBillingBook.DDSArea, tblContractsBillingBook.Staff, tblContractsBillingBook.Comments AS BillingBookComments, [BillingRate]*[NumberOfClients]*Forms![frmRptFinancialAndLetters]!MRNumDays AS BilledPerProgram, [InternalRate]*[NumberOfClients]*Forms![frmRptFinancialAndLetters]!MRNumDays AS InternalAmount, tblContractsBillingBook.FundingSource, tblContracts.AccountingStaff, tblContracts.FY
+FROM tblContracts LEFT JOIN tblContractsBillingBook ON (tblContracts.FY = tblContractsBillingBook.FY) AND (tblContracts.ContractID = tblContractsBillingBook.ContractID)
+WHERE (((tblContracts.FY)=Forms!frmMainMenu!SelectFY) And ((IIf(Left(tblContracts!ContractID,1)="1" Or Mid(tblContracts!ContractID,3,3)="DDS" Or Left(tblContracts!ContractID,2)="IN","DDS","Non-DDS"))="DDS"))
+ORDER BY tblContracts.ContractID, tblContractsBillingBook.BIllingBookNumber;
+

@@ -1,0 +1,19 @@
+Table Name: qrycatClusters
+Table Type: VIEW
+Column Count: 12
+Extracted: 2026-01-29 16:09:05
+
+Columns:
+============================================================
+  - ClusterDirectorDID: Type=3, Size=0
+  - ClusterDirectorFirstName: Type=202, Size=25
+  - ClusterDirectorLastName: Type=202, Size=25
+  - ClusterDirectorMiddleInitial: Type=202, Size=1
+  - ClusterEmergencyCell: Type=202, Size=15
+  - ClusterID: Type=2, Size=0
+  - ClusterManagerCell: Type=202, Size=15
+  - ClusterManagerDID: Type=3, Size=0
+  - ClusterManagerFirstName: Type=202, Size=25
+  - ClusterManagerLastName: Type=202, Size=25
+  - ClusterManagerMiddleInitial: Type=202, Size=1
+  - ClusterName: Type=202, Size=25
