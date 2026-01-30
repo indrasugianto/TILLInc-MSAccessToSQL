@@ -1,273 +1,518 @@
-' Module Name: Expirations
-' Module Type: Standard Module
-' Lines of Code: 580
-' Extracted: 1/29/2026 4:12:28 PM
-
 Option Compare Database
 Option Explicit
 
+' =============================================
+' Function: RunExpirationsReport
+' Description: Generates the Expiration Dates report by calling a SQL Server stored procedure
+'              instead of executing inline SQL statements
+'
+' Parameters:
+'   ExpDatesReportInitiatedFromReportsMenu - Boolean indicating if called from Reports menu
+'
+' Returns:
+'   Boolean - True if successful, False otherwise
+' =============================================
 Public Function RunExpirationsReport(ExpDatesReportInitiatedFromReportsMenu As Boolean) As Boolean
-On Error GoTo 0
-'On Error GoTo ShowMeError
-    Dim Criteria As Variant, TempDB As Database, ExportFileName As String
-    
-    Set TempDB = CurrentDb
-    TempDB.QueryTimeout = 0
+On Error GoTo ShowMeError
 
-    Form_frmRpt.ProgressMessages = "": Form_frmRpt.ProgressMessages.Requery
+    Dim conn As ADODB.Connection
+    Dim cmd As ADODB.Command
+    Dim rs As ADODB.Recordset
+    Dim ExportFileName As String
+    Dim ReturnValue As Integer
     
+    ' Initialize
+    RunExpirationsReport = False
+    
+    ' Update progress
+    Form_frmRpt.ProgressMessages = ""
+    Form_frmRpt.ProgressMessages.Requery
+    
+    ' Check if we should skip expirations
     If DontRunExpirations Then
-        MsgBox "There are no records in the Staff or Staff Skills tables." & vbCrLf & "SQL Server Refresh Skills job likely failed." & vbCrLf & _
-               "You cannot run Expiration Dates report or Staff Evals and Supervisions until fixed." & vbCrLf & "Contact Tech Services to resolve.", vbOKOnly, "Error!"
+        MsgBox "There are no records in the Staff or Staff Skills tables." & vbCrLf & _
+               "SQL Server Refresh Skills job likely failed." & vbCrLf & _
+               "You cannot run Expiration Dates report or Staff Evals and Supervisions until fixed." & vbCrLf & _
+               "Contact Tech Services to resolve.", vbOKOnly, "Error!"
         RunExpirationsReport = False
         Exit Function
     End If
-'   First, generate a listing of staff with no skills records.
+    
+    ' =============================================
+    ' STEP 1: Generate list of staff without skills
+    ' =============================================
     Call AppendProgressMessages("Generating list of staff without skills.")
     Call ExecReport("rptSTAFFWITHNOSKILLS")
     
-'   Initialize for Expiration Dates.
-    RunExpirationsReport = True
-    Call DropTempTables
-    DoCmd.SetWarnings False
-
-'   Create a temporary table for staff.
-    Call AppendProgressMessages("Creating temporary table for staff.")
-    Call ExpirationsHousekeeping(TempDB, 1)
-'   DoCmd.OpenQuery "qryEXPIRATIONS01"
-    TempDB.Execute "SELECT tblStaff.* INTO tempstaff FROM tblStaff ORDER BY tblStaff.LASTNAME, tblStaff.FRSTNAME;", dbSeeChanges: Call BriefDelay: Call BriefDelay
-'   DoCmd.OpenQuery "qryEXPIRATIONS02"
-    TempDB.Execute "UPDATE qrytblStaffDedhamManagers INNER JOIN tempstaff ON qrytblStaffDedhamManagers.SUPERVISORCODE_I = tempstaff.SUPERVISORCODE_I " & _
-        "SET tempstaff.DIVISIONCODE_I = 'DEDHAM', tempstaff.DEPRTMNT = qrytblStaffDedhamManagers.NewLocation;", dbSeeChanges: Call BriefDelay: Call BriefDelay
-'   DoCmd.OpenQuery "qryEXPIRATIONS02A"
-    TempDB.Execute "ALTER TABLE tempstaff ADD CONSTRAINT tempstaffconstraint PRIMARY KEY (EMPLOYID);", dbSeeChanges: Call BriefDelay
-'   DoCmd.OpenQuery "qryEXPIRATIONS03"
-    TempDB.Execute "DELETE tempstaff.* FROM tempstaff WHERE LastName = 'EXAMPLE';", dbSeeChanges: Call BriefDelay
-
-'   Create the temporary GPSupercodes table.
-    Call AppendProgressMessages("Emptying the temporary GP Supervisors table.")
-'   DoCmd.OpenQuery "qryEXPIRATIONS03A"
-    TempDB.Execute "DELETE [~TempSuperCodes].* FROM [~TempSuperCodes];", dbSeeChanges: Call BriefDelay
-'   DoCmd.OpenQuery "qryEXPIRATIONS04"
-    TempDB.Execute "INSERT INTO [~TempSuperCodes] (GPCode, GPSuperCode, JobTitle) " & _
-        "SELECT tblStaff.DEPRTMNT, tblStaff.SUPERVISORCODE_I, tblStaff.JOBTITLE FROM tblStaff " & _
-        "WHERE (((tblStaff.JobTitle) = 'RESUNT' OR (tblStaff.JobTitle) = 'RESUPR' OR (tblStaff.JobTitle) = 'ASDRRE' OR (tblStaff.JobTitle) = 'DASUPR' OR (tblStaff.JobTitle) = 'SENDPM')) OR " & _
-        "(((tblStaff.DEPRTMNT) = 'CHELSE') AND ((tblStaff.JobTitle) = 'PRGMGR')) OR " & _
-        "(((tblStaff.DEPRTMNT) = 'NEWTON') AND ((tblStaff.JobTitle) = 'PRGMGR')) OR " & _
-        "(((tblStaff.JobTitle) = 'RESMGR')) OR (((tblStaff.JobTitle) = 'SITECO')) " & _
-        "ORDER BY tblStaff.DEPRTMNT;", dbSeeChanges: Call BriefDelay
-
-'   Create a temporary table for staff skills.
-    Call AppendProgressMessages("Creating temporary table for staff skills.")
-    Call ExpirationsHousekeeping(TempDB, 2)
-'   DoCmd.OpenQuery "qryEXPIRATIONS05"
-    TempDB.Execute "SELECT tblStaffSkills.* INTO tempstaffskills FROM tblStaff " & _
-        "LEFT JOIN tblStaffSkills ON tblStaff.EMPLOYID = tblStaffSkills.EMPID_I " & _
-        "WHERE tblStaffSkills.SKILLNUMBER_I = 1 OR tblStaffSkills.SKILLNUMBER_I = 2 OR tblStaffSkills.SKILLNUMBER_I = 3 OR tblStaffSkills.SKILLNUMBER_I = 15 OR " & _
-        "tblStaffSkills.SKILLNUMBER_I = 22 OR tblStaffSkills.SKILLNUMBER_I = 30 OR tblStaffSkills.SKILLNUMBER_I = 31 OR tblStaffSkills.SKILLNUMBER_I = 32 OR " & _
-        "tblStaffSkills.SKILLNUMBER_I = 33 OR tblStaffSkills.SKILLNUMBER_I = 34 OR tblStaffSkills.SKILLNUMBER_I = 35 OR tblStaffSkills.SKILLNUMBER_I = 36 OR " & _
-        "tblStaffSkills.SKILLNUMBER_I = 39;", dbSeeChanges: Call BriefDelay
-'   DoCmd.OpenQuery "qryEXPIRATIONS05A"
-    TempDB.Execute "ALTER TABLE tempstaffskills ADD CONSTRAINT tempstaffskillsconstraint PRIMARY KEY (EMPID_I, SKILLNUMBER_I);", dbSeeChanges: Call BriefDelay
-
-'   Empty the expirations table.
-    Call AppendProgressMessages("Empty the Expiration Dates table.")
-'   DoCmd.OpenQuery "qryEXPIRATIONS05B"
-    TempDB.Execute "DELETE tblExpirations.* FROM tblExpirations;", dbSeeChanges: Call BriefDelay
-
-'   Build the program lookup table.  This looks for locations where a GPName is specified.  It goes through each program separately.
-    Call AppendProgressMessages("Build base program lookup table.")
-'   All staff with a GP Supervisor code.  Fix blank supercodes.
-'   DoCmd.OpenQuery "qryEXPIRATIONS06"
-    TempDB.Execute "SELECT [CityTown] & ' - ' & [LocationName] AS Location, tblLocations.CityTown, tblLocations.LocationName, tblLocations.GPName, tblPeople.GPSuperCode " & _
-        "INTO temptbl " & _
-        "FROM tblLocations INNER JOIN tblPeople ON (tblLocations.LocationName = tblPeople.OfficeLocationName) AND (tblLocations.CityTown = tblPeople.OfficeCityTown) " & _
-        "WHERE tblLocations.GPName IS NOT NULL AND tblPeople.IsStaff = True " & _
-        "ORDER BY [CityTown] & ' - ' & [LocationName]; ", dbSeeChanges: Call BriefDelay
-'   DoCmd.OpenQuery "qryEXPIRATIONS07"
-    TempDB.Execute "UPDATE temptbl " & _
-        "SET temptbl.GPSuperCode = DLookUp ('GPSuperCode', '~TempSuperCodes', ""GPCode='"" & [temptbl].[GPName] & ""'"") " & _
-        "WHERE ((([temptbl].[GPSuperCode]) IS NULL));", dbSeeChanges: Call BriefDelay
-'   DoCmd.OpenQuery "qryEXPIRATIONS08"
-    TempDB.Execute "INSERT INTO temptbl (Location, CityTown, LocationName, GPName, GPSuperCode) " & _
-        "SELECT [CityTown] & ' - ' & [LocationName] AS Location, tblLocations.CityTown, tblLocations.LocationName, tblLocations.GPName, " & _
-        "DLookUp ('GPSuperCode', 'tblPeople', ""FirstName='"" & tblLocations.StaffPrimaryContactFirstName & ""' AND LastName='"" & tblLocations.StaffPrimaryContactLastName & "" '"" ) AS Expr1 " & _
-        "FROM tblLocations WHERE (((tblLocations.CityTown) <> 'Dedham') AND ((tblLocations.GPName) IS NOT NULL) AND ((tblLocations.Department) = 'Individualized Support Options')) " & _
-        "ORDER BY [CityTown] & ' - ' & [LocationName];", dbSeeChanges: Call BriefDelay
-
-    Call AppendProgressMessages("Parse program lookup table.")
-    Call AppendProgressMessages("    This takes a few minutes.")
-'   DoCmd.OpenQuery "qryEXPIRATIONS09"
-    TempDB.Execute "SELECT IIf(IsNull([tblPeopleClientsResidentialServices]![CityTown]),'',[tblPeopleClientsResidentialServices]![CityTown] & ' - ' & [tblPeopleClientsResidentialServices]![Location]) AS LocRes, IIf(IsNull([tblPeopleClientsCLOServices]![CityTown]),'',[tblPeopleClientsCLOServices]![CityTown] & ' - ' & [tblPeopleClientsCLOServices]![Location]) AS LocCLO, IIf(IsNull([tblPeopleClientsDayServices]![CityTown]),'',[tblPeopleClientsDayServices]![CityTown] & ' - ' & [tblPeopleClientsDayServices]![LocationName]) AS LocDay, IIf(IsNull([tblPeopleClientsVocationalServices]![CityTown]),'',[tblPeopleClientsVocationalServices]![CityTown] & ' - ' & [tblPeopleClientsVocationalServices]![Location]) AS LocVoc, " & _
-        "Null AS Supervisor, tblPeople.IndexedName, tblPeople.LastName, tblPeople.FirstName, tblPeople.MiddleInitial, tblPeopleClientsDemographics.DateISP, tblPeopleClientsDemographics.DateConsentFormsSigned, tblPeopleClientsDemographics.DateBMMExpires, tblPeopleClientsDemographics.DateBMMAccessSignedHRC, tblPeopleClientsDemographics.DateBMMAccessSigned, " & _
-        "tblPeopleClientsDemographics.DateSPDAuthExpires, tblPeopleClientsDemographics.DateSignaturesDueBy, tblPeopleClientsDemographics.AllSPDSignaturesReceived INTO temptbl0 " & _
-        "FROM ((((tblPeople RIGHT JOIN tblPeopleClientsDemographics ON tblPeople.IndexedName = tblPeopleClientsDemographics.IndexedName) LEFT JOIN tblPeopleClientsCLOServices ON tblPeopleClientsDemographics.IndexedName = tblPeopleClientsCLOServices.IndexedName) LEFT JOIN tblPeopleClientsDayServices ON tblPeopleClientsDemographics.IndexedName = tblPeopleClientsDayServices.IndexedName) LEFT JOIN tblPeopleClientsResidentialServices ON tblPeopleClientsDemographics.IndexedName = tblPeopleClientsResidentialServices.IndexedName) LEFT JOIN tblPeopleClientsVocationalServices ON tblPeopleClientsDemographics.IndexedName = tblPeopleClientsVocationalServices.IndexedName " & _
-        "WHERE ((((tblPeopleClientsDemographics.ActiveDayServices)=True) AND ((tblPeopleClientsDayServices.Inactive)=False)) OR " & _
-        "(((tblPeopleClientsDemographics.ActiveResidentialServices)=True) AND ((tblPeopleClientsResidentialServices.Inactive)=False)) OR " & _
-        "(((tblPeopleClientsDemographics.ActiveCLO)=True) AND ((tblPeopleClientsCLOServices.Inactive)=False)) OR " & _
-        "(((tblPeopleClientsDemographics.ActiveVocationalServices)=True) AND ((tblPeopleClientsVocationalServices.Inactive)=False))) AND tblPeople.IsDeceased = False;", dbSeeChanges: Call BriefDelay
+    ' =============================================
+    ' STEP 2: Connect to SQL Server
+    ' =============================================
+    Call AppendProgressMessages("Connecting to SQL Server...")
     
-'   CLO.
-    Call AppendProgressMessages("Populate program lookup table with CLO information.")
-'   DoCmd.OpenQuery "qryEXPIRATIONS10"
-    TempDB.Execute "UPDATE (temptbl0 LEFT JOIN qrytblPeopleClientsDemographics ON temptbl0.IndexedName = qrytblPeopleClientsDemographics.IndexedName) LEFT JOIN tblPeopleClientsCLOServices ON temptbl0.IndexedName = tblPeopleClientsCLOServices.IndexedName SET temptbl0.LocCLO = Null " & _
-        "WHERE (Len(temptbl0!LocCLO)>0 And qrytblPeopleClientsDemographics.ActiveCLO=False) Or (Len(temptbl0!LocCLO)>0 And qrytblPeopleClientsDemographics.ActiveCLO=True And tblPeopleClientsCLOServices.Inactive=True);", dbSeeChanges: Call BriefDelay
+    Set conn = New ADODB.Connection
+    ' Use the existing connection string from your Access database
+    ' Adjust this based on your connection setup
+    conn.ConnectionString = GetSQLServerConnectionString()
+    conn.Open
+    conn.CommandTimeout = 0 ' No timeout for long-running operations
     
-'   Residential.
-    Call AppendProgressMessages("Populate program lookup table with residential program information.")
-'   DoCmd.OpenQuery "qryEXPIRATIONS11
-    TempDB.Execute "UPDATE (temptbl0 LEFT JOIN qrytblPeopleClientsDemographics ON temptbl0.IndexedName = qrytblPeopleClientsDemographics.IndexedName) LEFT JOIN tblPeopleClientsResidentialServices ON temptbl0.IndexedName = tblPeopleClientsResidentialServices.IndexedName SET temptbl0.LocRes = Null " & _
-        "WHERE (((Len(temptbl0!LocRes))>0) And ((qrytblPeopleClientsDemographics.ActiveResidentialServices)=False)) Or (((Len(temptbl0!LocRes))>0) And ((qrytblPeopleClientsDemographics.ActiveResidentialServices)=True) And ((tblPeopleClientsResidentialServices.Inactive)=True));", dbSeeChanges: Call BriefDelay
+    ' =============================================
+    ' STEP 3: Call the stored procedure
+    ' =============================================
+    Call AppendProgressMessages("Executing stored procedure to generate expiration data...")
+    Call AppendProgressMessages("This may take several minutes. Please wait...")
     
-'   Day.
-    Call AppendProgressMessages("Populate program lookup table with day program information.")
-'   DoCmd.OpenQuery "qryEXPIRATIONS12"
-    TempDB.Execute "UPDATE (temptbl0 LEFT JOIN qrytblPeopleClientsDemographics ON temptbl0.IndexedName = qrytblPeopleClientsDemographics.IndexedName) LEFT JOIN tblPeopleClientsDayServices ON temptbl0.IndexedName = tblPeopleClientsDayServices.IndexedName SET temptbl0.LocDay = Null " & _
-        "WHERE (((Len(temptbl0!LocDay))>0) And ((qrytblPeopleClientsDemographics.ActiveDayServices)=False)) Or (((Len(temptbl0!LocDay))>0) And ((qrytblPeopleClientsDemographics.ActiveDayServices)=True) And ((tblPeopleClientsDayServices.Inactive)=True));", dbSeeChanges: Call BriefDelay
+    Set cmd = New ADODB.Command
+    With cmd
+        .ActiveConnection = conn
+        .CommandType = adCmdStoredProc
+        .CommandText = "spApp_RunExpirationReport"
+        .CommandTimeout = 0 ' No timeout
+        
+        ' Add return value parameter
+        .Parameters.Append .CreateParameter("ReturnValue", adInteger, adParamReturnValue)
+        
+        ' Execute the stored procedure
+        Set rs = .Execute
+        
+        ' Get the return value
+        ReturnValue = .Parameters("ReturnValue").Value
+    End With
     
-'   Vocational.
-    Call AppendProgressMessages("Populate program lookup table with vocational program information.")
-'   DoCmd.OpenQuery "qryEXPIRATIONS13"
-    TempDB.Execute "UPDATE (temptbl0 LEFT JOIN qrytblPeopleClientsDemographics ON temptbl0.IndexedName = qrytblPeopleClientsDemographics.IndexedName) LEFT JOIN tblPeopleClientsVocationalServices ON temptbl0.IndexedName = tblPeopleClientsVocationalServices.IndexedName SET temptbl0.LocVoc = Null " & _
-        "WHERE (((Len(temptbl0!LocVoc))>0) And ((qrytblPeopleClientsDemographics.ActiveVocationalServices)=False)) Or (((Len(temptbl0!LocVoc))>0) And ((qrytblPeopleClientsDemographics.ActiveVocationalServices)=True) And ((tblPeopleClientsVocationalServices.Inactive)=True));", dbSeeChanges: Call BriefDelay
-
-'   Populate house information.
-    Call AppendProgressMessages("Populate house information.")
-'   DoCmd.OpenQuery "qryEXPIRATIONS14"
-    TempDB.Execute "INSERT INTO tblExpirations (Location, RecordType, LastName, FirstName, Supervisor, LastVehicleChecklistCompleted, MostRecentAsleepFireDrill, NextRecentAsleepFireDrill, " & _
-        "HouseSafetyPlanExpires, HousePlansReviewedByStaffBefore, DAYStaffTrainedInPrivacyBefore, DAYAllPlansReviewedByStaffBefore, DAYQtrlySafetyChecklistDueBy, MAPChecklistCompleted, " & _
-        "HumanRightsOfficer, HROTrainsStaffBefore, HROTrainsIndividualsBefore, FireSafetyOfficer, FSOTrainsStaffBefore, FSOTrainsIndividualsBefore) " & _
-        "SELECT tblLocations.GPName AS Location, 'House' AS RecordType, '*' AS LastName, '*' AS FirstName, " & _
-        "DLookUp ('GPSuperCode', 'temptbl', ""GPName='"" & tblLocations.GPName & ""'"") AS Supervisor, " & _
-        "tblLocations.LastVehicleChecklistCompleted, tblLocations.MostRecentAsleepFireDrill, tblLocations.NextRecentAsleepFireDrill, tblLocations.HouseSafetyPlanExpires," & _
-        "tblLocations.HousePlansReviewedByStaffBefore, tblLocations.DAYStaffTrainedInPrivacyBefore, tblLocations.DAYAllPlansReviewedByStaffBefore, tblLocations.DAYQtrlySafetyChecklistDueBy, " & _
-        "tblLocations.MAPChecklistCompleted, tblLocations.HumanRightsOfficer, tblLocations.HROTrainsStaffBefore, tblLocations.HROTrainsIndividualsBefore, " & _
-        "tblLocations.FireSafetyOfficer, tblLocations.FSOTrainsStaffBefore, tblLocations.FSOTrainsIndividualsBefore FROM tblLocations " & _
-        "WHERE tblLocations.GPName IS NOT NULL AND DLookUp('GPSuperCode', 'temptbl', 'GPName=""' & tblLocations.GPName & '""') IS NOT NULL AND " & _
-        "tblLocations.Department <> 'Clinical and Support Services' ORDER BY tblLocations.GPName;", dbSeeChanges: Call BriefDelay
-    Call AppendProgressMessages("Populate CLO client information.")
-'   DoCmd.OpenQuery "qryEXPIRATIONS15"
-    TempDB.Execute "INSERT INTO tblExpirations (Location, RecordType, LastName, FirstName, Supervisor, DateISP, DateConsentFormsSigned, DateBMMExpires, DateBMMAccessSignedHRC, DateBMMAccessSigned, DateSPDAuthExpires, DateSignaturesDueBy, AllSPDSignaturesReceived) " & _
-        "SELECT DLookUp (""GPName"", ""temptbl"", ""Location='"" & [LocCLO] & ""'"") AS Location, 'Client' AS RecordType, temptbl0.LastName, temptbl0.FirstName, " & _
-        "DLookUp (""GPSuperCode"", ""temptbl"", ""Location='"" & [LocCLO] & ""'"") AS Supervisor, temptbl0.DateISP, temptbl0.DateConsentFormsSigned, temptbl0.DateBMMExpires, " & _
-        "temptbl0.DateBMMAccessSignedHRC, temptbl0.DateBMMAccessSigned, temptbl0.DateSPDAuthExpires, temptbl0.DateSignaturesDueBy, temptbl0.AllSPDSignaturesReceived " & _
-        "FROM temptbl0 " & _
-        "WHERE (((DLookUp(""GPName"", ""temptbl"", ""Location='"" & [LocCLO] & ""'"")) IS NOT NULL) AND ((temptbl0.LastName) IS NOT NULL) AND ((temptbl0.FirstName) IS NOT NULL));", dbSeeChanges: Call BriefDelay
-    Call AppendProgressMessages("Populate residential client information.")
-'   DoCmd.OpenQuery "qryEXPIRATIONS16"
-    TempDB.Execute "INSERT INTO tblExpirations (Location, RecordType, LastName, FirstName, Supervisor, DateISP, DateConsentFormsSigned, DateBMMExpires, DateBMMAccessSignedHRC, DateBMMAccessSigned, DateSPDAuthExpires, DateSignaturesDueBy, AllSPDSignaturesReceived) " & _
-        "SELECT DLookUp(""GPName"", ""temptbl"", ""Location='"" & [LocRes] & ""'"") AS Location, 'Client' AS RecordType, temptbl0.LastName, temptbl0.FirstName, " & _
-        "DLookUp (""GPSuperCode"", ""temptbl"", ""Location='"" & [LocRes] & ""'"") AS Supervisor, temptbl0.DateISP, temptbl0.DateConsentFormsSigned, temptbl0.DateBMMExpires, temptbl0.DateBMMAccessSignedHRC, temptbl0.DateBMMAccessSigned, temptbl0.DateSPDAuthExpires, temptbl0.DateSignaturesDueBy, temptbl0.AllSPDSignaturesReceived " & _
-        "FROM temptbl0 " & _
-        "WHERE (((DLookUp(""GPName"", ""temptbl"", ""Location='"" & [LocRes] & ""'"")) IS NOT NULL) AND ((temptbl0.LastName) IS NOT NULL) AND ((temptbl0.FirstName) IS NOT NULL));", dbSeeChanges: Call BriefDelay
-    Call AppendProgressMessages("Populate vocational client information.")
-'   DoCmd.OpenQuery "qryEXPIRATIONS17"
-    TempDB.Execute "INSERT INTO tblExpirations (Location, RecordType, LastName, FirstName, Supervisor, DateISP, DateConsentFormsSigned, DateBMMExpires, DateBMMAccessSignedHRC, DateBMMAccessSigned, DateSPDAuthExpires, DateSignaturesDueBy, AllSPDSignaturesReceived) " & _
-        "SELECT DLookUp(""GPName"", ""temptbl"", ""Location='"" & [LocVoc] & ""'"") AS Location, 'Client' AS RecordType, temptbl0.LastName, temptbl0.FirstName," & _
-        "DLookUp(""GPSuperCode"", ""temptbl"", ""Location='"" & [LocVoc] & ""'"") AS Supervisor, temptbl0.DateISP, temptbl0.DateConsentFormsSigned, temptbl0.DateBMMExpires, temptbl0.DateBMMAccessSignedHRC, temptbl0.DateBMMAccessSigned, temptbl0.DateSPDAuthExpires, temptbl0.DateSignaturesDueBy, temptbl0.AllSPDSignaturesReceived " & _
-        "FROM temptbl0 " & _
-        "WHERE (((DLookUp(""GPName"", ""temptbl"", ""Location='"" & [LocVoc] & ""'"")) IS NOT NULL) AND ((temptbl0.LastName) IS NOT NULL) AND ((temptbl0.FirstName) IS NOT NULL));", dbSeeChanges: Call BriefDelay
-
-'   Populate staff information.
-    Call AppendProgressMessages("Populate staff information.")
-'   DoCmd.OpenQuery "qryEXPIRATIONS18"
-    TempDB.Execute "INSERT INTO tblExpirations ( Location, RecordType, LastName, FirstName, JobTitle, Supervisor, AdjustedStartDate ) " & _
-        "SELECT [tempstaff]![DEPRTMNT] AS Location, 'Staff' AS RecordType, tempstaff.LASTNAME, tempstaff.FRSTNAME, tempstaff.JOBTITLE, tempstaff.SUPERVISORCODE_I, tempstaff.BENADJDATE AS AdjustedStartDate " & _
-        "FROM tempstaff INNER JOIN tempstaffskills ON tempstaff.EMPLOYID = tempstaffskills.EMPID_I " & _
-        "WHERE tempstaff.DEPRTMNT Is Not Null And tempstaff.LastName Is Not Null And tempstaff.FRSTNAME Is Not Null " & _
-        "ORDER BY tempstaff.LASTNAME, tempstaff.FRSTNAME;", dbSeeChanges: Call BriefDelay
-
-'   Update staff information.
-    Call AppendProgressMessages("Populate staff skills information and descriptors.")
-    Call AppendProgressMessages("    This takes a few minutes.")
-'   DoCmd.OpenQuery "qryEXPIRATIONS19"
-    TempDB.Execute "SELECT tempstaffskills.EMPID_I, tempstaffskills.SKILLNUMBER_I, tempstaffskills.EXPIREDSKILL_I INTO temptbl1 " & _
-        "FROM tempstaffskills INNER JOIN tblStaff ON tempstaffskills.EMPID_I = tblStaff.EMPLOYID " & _
-        "WHERE tempstaffskills.SKILLNUMBER_I = 1 OR tempstaffskills.SKILLNUMBER_I = 2 OR tempstaffskills.SKILLNUMBER_I = 3 OR tempstaffskills.SKILLNUMBER_I = 15 " & _
-        "OR tempstaffskills.SKILLNUMBER_I = 22 OR tempstaffskills.SKILLNUMBER_I = 30 OR tempstaffskills.SKILLNUMBER_I = 31  OR tempstaffskills.SKILLNUMBER_I = 32 " & _
-        "OR tempstaffskills.SKILLNUMBER_I = 33 OR tempstaffskills.SKILLNUMBER_I = 34 OR tempstaffskills.SKILLNUMBER_I = 35 OR tempstaffskills.SKILLNUMBER_I = 36 OR tempstaffskills.SKILLNUMBER_I = 39;", dbSeeChanges: Call BriefDelay
-'   DoCmd.OpenQuery "qryEXPIRATIONS20"
-    TempDB.Execute "SELECT temptbl1.*, DLookUp(""Skill"", ""catSkills"", ""SkillID="" & [SKILLNUMBER_I]) AS SkillDesc INTO temptbl2 FROM temptbl1;", dbSeeChanges: Call BriefDelay
+    ' Check the return value
+    Select Case ReturnValue
+        Case 0
+            ' Success - continue with report generation
+            Call AppendProgressMessages("Data generation completed successfully.")
+            
+        Case 1
+            ' No data available
+            MsgBox "There are no records in the Staff or Staff Skills tables." & vbCrLf & _
+                   "SQL Server Refresh Skills job likely failed." & vbCrLf & _
+                   "You cannot run Expiration Dates report or Staff Evals and Supervisions until fixed." & vbCrLf & _
+                   "Contact Tech Services to resolve.", vbOKOnly, "Error!"
+            GoTo CleanupAndExit
+            
+        Case Else
+            ' Error occurred
+            MsgBox "An error occurred while generating the expiration data." & vbCrLf & _
+                   "Please contact Tech Services.", vbOKOnly, "Error!"
+            GoTo CleanupAndExit
+    End Select
     
-    Call AppendProgressMessages("Crosstabulate staff skills.")
-'   DoCmd.OpenQuery "qryEXPIRATIONS21"
-    TempDB.Execute "SELECT * INTO temptbl3 FROM qryExpirationsStaffBySkills;", dbSeeChanges: Call BriefDelay
+    ' =============================================
+    ' STEP 4: Generate and Export the Report
+    ' =============================================
+    Call AppendProgressMessages("Generating the PDF report...")
     
-    Call AppendProgressMessages("Populate expirations table with staff skills.")
-'   DoCmd.OpenQuery "qryEXPIRATIONS22"
-    TempDB.Execute "UPDATE qrytblExpirations INNER JOIN temptbl3 ON (qrytblExpirations.FirstName = temptbl3.FRSTNAME) AND (qrytblExpirations.LastName = temptbl3.LASTNAME) AND (qrytblExpirations.Location = temptbl3.DEPRTMNT) " & _
-        "SET qrytblExpirations.CPR = [temptbl3].[CPR], qrytblExpirations.FirstAid = [temptbl3].[FirstAid], qrytblExpirations.MAPCert = [temptbl3].[MAPCert], " & _
-        "qrytblExpirations.DriversLicense = [temptbl3].[DriversLicense], qrytblExpirations.BBP = [temptbl3].[BBP], qrytblExpirations.BackInjuryPrevention = [temptbl3].[BackInjuryPrevention], " & _
-        "qrytblExpirations.SafetyCares = [temptbl3].[SafetyCares], qrytblExpirations.TB = [temptbl3].[TB], qrytblExpirations.WorkplaceViolence = [temptbl3].[WorkplaceViolence], qrytblExpirations.DefensiveDriving = [temptbl3].[DefensiveDriving], " & _
-        "qrytblExpirations.WheelchairSafety = [temptbl3].[WheelchairSafety], qrytblExpirations.PBS = [temptbl3].[PBS], qrytblExpirations.ProfessionalLicenses = [temptbl3].[ProfLic] " & _
-        "WHERE (((qrytblExpirations.RecordType) = 'Staff'));", dbSeeChanges: Call BriefDelay
+    ' Export the report to PDF
+    ExportFileName = Application.CurrentProject.Path & "\" & _
+                     "TILLDB-Report-ExpirationDates-" & Format(Date, "yyyymmdd") & ".pdf"
     
-    Call AppendProgressMessages("Populate expiration dates table with staff evals and supervisions.")
-'   DoCmd.OpenQuery "qryEXPIRATIONS23"
-    TempDB.Execute "UPDATE qrytblExpirations INNER JOIN qrytblStaffEvalsAndSupervisions ON (qrytblExpirations.FirstName = qrytblStaffEvalsAndSupervisions.FirstName) AND (qrytblExpirations.LastName = qrytblStaffEvalsAndSupervisions.LastName) SET qrytblExpirations.ThreeMonthEvaluation = [qrytblStaffEvalsAndSupervisions]![ThreeMonthEval], qrytblExpirations.EvalDueBy = [qrytblStaffEvalsAndSupervisions]![EvalDueBy], qrytblExpirations.LastSupervision = [qrytblStaffEvalsAndSupervisions]![LastSupervision], qrytblExpirations.OnLeave = [qrytblStaffEvalsAndSupervisions]![OnLeave] " & _
-        "WHERE qrytblExpirations.RecordType='Staff';", dbSeeChanges: Call BriefDelay
-
-'   Finally, see if we can add supervisor expirations to their own report.
-    Call AppendProgressMessages("Add supervisor's expirations to table.")
-'   DoCmd.OpenQuery "qryEXPIRATIONS24"
-    TempDB.Execute "INSERT INTO tblExpirations (Location, RecordType, LastName, FirstName, Supervisor, JobTitle, AdjustedStartDate, LastVehicleChecklistCompleted, MostRecentAsleepFireDrill, NextRecentAsleepFireDrill, HouseSafetyPlanExpires, HousePlansReviewedByStaffBefore, DAYStaffTrainedInPrivacyBefore, DAYAllPlansReviewedByStaffBefore, DAYQtrlySafetyChecklistDueBy, MAPChecklistCompleted, HumanRightsOfficer, HROTrainsStaffBefore, HROTrainsIndividualsBefore, FireSafetyOfficer, FSOTrainsStaffBefore, FSOTrainsIndividualsBefore, DateISP, DateConsentFormsSigned, DateBMMExpires, DateBMMAccessSignedHRC, DateBMMAccessSigned, DateSPDAuthExpires, DateSignaturesDueBy, AllSPDSignaturesReceived, BBP, BackInjuryPrevention, CPR, DefensiveDriving, DriversLicense, FirstAid, MAPCert, PBS, SafetyCares, TB, WheelchairSafety, WorkplaceViolence, ProfessionalLicenses, ThreeMonthEvaluation, EvalDueBy, LastSupervision, OnLeave ) " & _
-        "SELECT tblLocations.GPName, 'Staff' AS RecordType, tblExpirations.LastName, tblExpirations.FirstName, tblPeople.GPSuperCode AS Supervisor, tblExpirations.JobTitle, tblExpirations.AdjustedStartDate, tblExpirations.LastVehicleChecklistCompleted, tblExpirations.MostRecentAsleepFireDrill, tblExpirations.NextRecentAsleepFireDrill, tblExpirations.HouseSafetyPlanExpires, tblExpirations.HousePlansReviewedByStaffBefore, tblExpirations.DAYStaffTrainedInPrivacyBefore, tblExpirations.DAYAllPlansReviewedByStaffBefore, tblExpirations.DAYQtrlySafetyChecklistDueBy, tblExpirations.MAPChecklistCompleted, tblExpirations.HumanRightsOfficer, tblExpirations.HROTrainsStaffBefore, tblExpirations.HROTrainsIndividualsBefore, tblExpirations.FireSafetyOfficer, tblExpirations.FSOTrainsStaffBefore, tblExpirations.FSOTrainsIndividualsBefore, tblExpirations.DateISP, tblExpirations.DateConsentFormsSigned, tblExpirations.DateBMMExpires, tblExpirations.DateBMMAccessSignedHRC, " & _
-        "tblExpirations.DateBMMAccessSigned , tblExpirations.DateSPDAuthExpires , tblExpirations.DateSignaturesDueBy, tblExpirations.AllSPDSignaturesReceived, tblExpirations.BBP, tblExpirations.BackInjuryPrevention, tblExpirations.CPR, tblExpirations.DefensiveDriving, tblExpirations.DriversLicense, tblExpirations.FirstAid, tblExpirations.MAPCert, tblExpirations.PBS, tblExpirations.SafetyCares, tblExpirations.TB, tblExpirations.WheelchairSafety, tblExpirations.WorkplaceViolence, tblExpirations.ProfessionalLicenses, tblExpirations.ThreeMonthEvaluation, tblExpirations.EvalDueBy, tblExpirations.LastSupervision, tblExpirations.OnLeave " & _
-        "FROM (tblLocations INNER JOIN tblPeople ON tblLocations.StaffPrimaryContactIndexedName = tblPeople.IndexedName) INNER JOIN tblExpirations ON (tblPeople.FirstName = tblExpirations.FirstName) AND (tblPeople.LastName = tblExpirations.LastName) " & _
-        "WHERE (((tblLocations.GPName) Is Not Null) And ((tblPeople.GPSuperCode) Is Not Null) And ((tblLocations.Department) = 'Residential Services' OR (tblLocations.Department) = 'Day Services' Or (tblLocations.Department) = 'Vocational Services' Or (tblLocations.Department) = 'TILL NH' Or (tblLocations.Department) = 'Expirations Reporting') And ((Right(tblLocations!StaffPrimaryContactIndexedName, 5)) <> 'TBD//')) Or (((tblLocations.GPName) Is Not Null) And ((tblPeople.GPSuperCode) Is Not Null) And ((tblLocations.CityTown) <> 'Dedham') And ((tblLocations.Department) = 'Individualized Support Options') And ((Right(tblLocations!StaffPrimaryContactIndexedName, 5)) <> 'TBD//')) " & _
-        "ORDER BY tblLocations.CityTown;", dbSeeChanges: Call BriefDelay
-
-'   Here, produce the report.
-    Call AppendProgressMessages("Generating the report.")
-'   Call ExecReport("rptEXPIRATIONDATES"): Call BriefDelay
-'   We export the report to a PDF without displaying it.
-    ExportFileName = Application.CurrentProject.Path & "\" & "TILLDB-Report-ExpirationDates-" & Format(Date, "yyyymmdd") & ".pdf"
+    ' Check if file is already open
     If IsFileOpen(ExportFileName) Then
-        If MsgBox(ExportFileName & " is already open.  Please close it and click OK to continue or Cancel to abort.", vbOKCancel, "ERROR!") = vbCancel Then
+        If MsgBox(ExportFileName & " is already open. Please close it and click OK to continue or Cancel to abort.", _
+                  vbOKCancel, "ERROR!") = vbCancel Then
             MsgBox "Export aborted.", vbOKOnly, "Aborted"
+            GoTo CleanupAndExit
         Else
             If Dir(ExportFileName) <> "" Then Kill ExportFileName
-            DoCmd.OutputTo acOutputReport, "rptEXPIRATIONSDATES", acFormatPDF, ExportFileName, False
-        MsgBox "The requested report has been exported to " & ExportFileName & "." & vbCrLf & vbCrLf & "This export may contain information that is protected under HIPAA and other privacy laws.  This export must be securely stored at all times and must be deleted when no longer being used.", _
-            vbOKOnly, "Export Complete"
+            DoCmd.OutputTo acOutputReport, "rptEXPIRATIONDATES", acFormatPDF, ExportFileName, False
+            MsgBox "The requested report has been exported to " & ExportFileName & "." & vbCrLf & vbCrLf & _
+                   "This export may contain information that is protected under HIPAA and other privacy laws. " & _
+                   "This export must be securely stored at all times and must be deleted when no longer being used.", _
+                   vbOKOnly, "Export Complete"
         End If
     Else
         If Dir(ExportFileName) <> "" Then Kill ExportFileName
         DoCmd.OutputTo acOutputReport, "rptEXPIRATIONDATES", acFormatPDF, ExportFileName, False
-        MsgBox "The requested report has been exported to " & ExportFileName & "." & vbCrLf & vbCrLf & "This export may contain information that is protected under HIPAA and other privacy laws.  This export must be securely stored at all times and must be deleted when no longer being used.", _
-            vbOKOnly, "Export Complete"
+        MsgBox "The requested report has been exported to " & ExportFileName & "." & vbCrLf & vbCrLf & _
+               "This export may contain information that is protected under HIPAA and other privacy laws. " & _
+               "This export must be securely stored at all times and must be deleted when no longer being used.", _
+               vbOKOnly, "Export Complete"
     End If
-
-'   Empty the Expiration Dates table.
-    Call AppendProgressMessages("Cleanup.")
-    Call ExpirationsHousekeeping(TempDB, 1): Call ExpirationsHousekeeping(TempDB, 2)
-'   DoCmd.OpenQuery "qryEXPIRATIONS25"
-    TempDB.Execute "DELETE tblExpirations.* FROM tblExpirations;", dbSeeChanges: Call BriefDelay
-'   DoCmd.OpenQuery "qryEXPIRATIONS26"
-    TempDB.Execute "DELETE [~TempSuperCodes].* FROM [~TempSuperCodes];", dbSeeChanges: Call BriefDelay
     
-    Form_frmRpt.ProgressMessages = "": Form_frmRpt.ProgressMessages.Requery
-    Call DropTempTables
+    RunExpirationsReport = True
     
-    DoCmd.SetWarnings True
-    SysCmdResult = SysCmd(5)
+CleanupAndExit:
+    ' =============================================
+    ' STEP 5: Cleanup
+    ' =============================================
+    Call AppendProgressMessages("Cleanup...")
+    
+    ' Clear tblExpirations (stored procedure populated it, now we're done with it)
+    ' Note: ~TempSuperCodes is now a SQL Server temp table and is automatically cleaned up
+    If conn.State = adStateOpen Then
+        conn.Execute "DELETE FROM tblExpirations", , adExecuteNoRecords
+    End If
+    
+    ' Close connections
+    If Not rs Is Nothing Then
+        If rs.State = adStateOpen Then rs.Close
+        Set rs = Nothing
+    End If
+    
+    If Not cmd Is Nothing Then Set cmd = Nothing
+    
+    If Not conn Is Nothing Then
+        If conn.State = adStateOpen Then conn.Close
+        Set conn = Nothing
+    End If
+    
+    ' Clear progress messages
+    Form_frmRpt.ProgressMessages = ""
+    Form_frmRpt.ProgressMessages.Requery
+    
     Exit Function
+
 ShowMeError:
-    Call DropTempTables
-    Call ExpirationsHousekeeping(TempDB, 1): Call ExpirationsHousekeeping(TempDB, 2)
-'   DoCmd.OpenQuery "qryEXPIRATIONS25"
-    TempDB.Execute "DELETE tblExpirations.* FROM tblExpirations;", dbSeeChanges: Call BriefDelay
-'   DoCmd.OpenQuery "qryEXPIRATIONS26"
-    TempDB.Execute "DELETE [~TempSuperCodes].* FROM [~TempSuperCodes];", dbSeeChanges: Call BriefDelay
-    Err.Source = "PublicSubroutines" & "(Line #" & Str(Err.Erl) & ")": TILLDBErrorMessage = "Error # " & Str(Err.Number) & " was generated by " & Err.Source & Chr(13) & Err.Description
-    MsgBox TILLDBErrorMessage, vbOKOnly, "Error", Err.HelpFile, Err.HelpContext
-    If ExpDatesReportInitiatedFromReportsMenu Then
-        Form_frmRpt.ProgressMessages = "": Form_frmRpt.ProgressMessages.Requery
-    Else
-        SysCmdResult = SysCmd(5)
+    ' Error handling
+    Dim TILLDBErrorMessage As String
+    
+    ' Cleanup temporary tables if error occurred
+    ' Note: ~TempSuperCodes is now a SQL Server temp table and is automatically cleaned up
+    On Error Resume Next
+    If Not conn Is Nothing Then
+        If conn.State = adStateOpen Then
+            conn.Execute "DELETE FROM tblExpirations", , adExecuteNoRecords
+        End If
     End If
-    DoCmd.SetWarnings True
+    On Error GoTo 0
+    
+    ' Build error message
+    TILLDBErrorMessage = "Error # " & Str(Err.Number) & " was generated by RunExpirationsReport" & _
+                         Chr(13) & Err.Description
+    
+    MsgBox TILLDBErrorMessage, vbOKOnly, "Error", Err.HelpFile, Err.HelpContext
+    
+    ' Clear progress messages
+    If ExpDatesReportInitiatedFromReportsMenu Then
+        Form_frmRpt.ProgressMessages = ""
+        Form_frmRpt.ProgressMessages.Requery
+    End If
+    
+    ' Close connections
+    If Not rs Is Nothing Then
+        If rs.State = adStateOpen Then rs.Close
+        Set rs = Nothing
+    End If
+    
+    If Not cmd Is Nothing Then Set cmd = Nothing
+    
+    If Not conn Is Nothing Then
+        If conn.State = adStateOpen Then conn.Close
+        Set conn = Nothing
+    End If
+    
+    RunExpirationsReport = False
 End Function
+
+' =============================================
+' Function: GetSQLServerConnectionString
+' Description: Returns the connection string for SQL Server
+'              Modify this based on your SQL Server configuration
+' =============================================
+Private Function GetSQLServerConnectionString() As String
+    ' Option 1: Using Linked Server (if you have one configured)
+    ' GetSQLServerConnectionString = CurrentDb.TableDefs("tblExpirations").Connect
+    
+    ' Option 2: Build connection string from configuration
+    ' You should store these values in a configuration table or use existing connection
+    Dim ServerName As String
+    Dim DatabaseName As String
+    Dim UseWindowsAuth As Boolean
+    Dim UserName As String
+    Dim Password As String
+
+    ' TODO: Load these from your configuration
+    ' Example values - MODIFY THESE:
+    ServerName = "tillsqlserver.database.windows.net"
+    DatabaseName = "TILLDBWEB_Prod"
+    UseWindowsAuth = False  ' Set to False if using SQL authentication
+    
+    If UseWindowsAuth Then
+        ' Windows Authentication
+        GetSQLServerConnectionString = _
+            "Provider=SQLOLEDB;" & _
+            "Data Source=" & ServerName & ";" & _
+            "Initial Catalog=" & DatabaseName & ";" & _
+            "Integrated Security=SSPI;"
+    Else
+        ' SQL Server Authentication
+        UserName = "tillsqladmin"  ' TODO: Load from config
+        Password = "Purpl3R31gn"  ' TODO: Load from config (encrypted!)
+
+        GetSQLServerConnectionString = _
+            "Provider=SQLOLEDB;" & _
+            "Data Source=" & ServerName & ";" & _
+            "Initial Catalog=" & DatabaseName & ";" & _
+            "User ID=" & UserName & ";" & _
+            "Password=" & Password & ";"
+    End If
+End Function
+
+'Public Function RunExpirationsReport(ExpDatesReportInitiatedFromReportsMenu As Boolean) As Boolean
+'On Error GoTo 0
+''On Error GoTo ShowMeError
+'    Dim Criteria As Variant, TempDB As Database, ExportFileName As String
+'
+'    Set TempDB = CurrentDb
+'    TempDB.QueryTimeout = 0
+'
+'    Form_frmRpt.ProgressMessages = "": Form_frmRpt.ProgressMessages.Requery
+'
+'    If DontRunExpirations Then
+'        MsgBox "There are no records in the Staff or Staff Skills tables." & vbCrLf & "SQL Server Refresh Skills job likely failed." & vbCrLf & _
+'               "You cannot run Expiration Dates report or Staff Evals and Supervisions until fixed." & vbCrLf & "Contact Tech Services to resolve.", vbOKOnly, "Error!"
+'        RunExpirationsReport = False
+'        Exit Function
+'    End If
+''   First, generate a listing of staff with no skills records.
+'    Call AppendProgressMessages("Generating list of staff without skills.")
+'    Call ExecReport("rptSTAFFWITHNOSKILLS")
+'
+''   Initialize for Expiration Dates.
+'    RunExpirationsReport = True
+'    Call DropTempTables
+'    DoCmd.SetWarnings False
+'
+''   Create a temporary table for staff.
+'    Call AppendProgressMessages("Creating temporary table for staff.")
+'    Call ExpirationsHousekeeping(TempDB, 1)
+''   DoCmd.OpenQuery "qryEXPIRATIONS01"
+'    TempDB.Execute "SELECT tblStaff.* INTO tempstaff FROM tblStaff ORDER BY tblStaff.LASTNAME, tblStaff.FRSTNAME;", dbSeeChanges: Call BriefDelay: Call BriefDelay
+''   DoCmd.OpenQuery "qryEXPIRATIONS02"
+'    TempDB.Execute "UPDATE qrytblStaffDedhamManagers INNER JOIN tempstaff ON qrytblStaffDedhamManagers.SUPERVISORCODE_I = tempstaff.SUPERVISORCODE_I " & _
+'        "SET tempstaff.DIVISIONCODE_I = 'DEDHAM', tempstaff.DEPRTMNT = qrytblStaffDedhamManagers.NewLocation;", dbSeeChanges: Call BriefDelay: Call BriefDelay
+''   DoCmd.OpenQuery "qryEXPIRATIONS02A"
+'    TempDB.Execute "ALTER TABLE tempstaff ADD CONSTRAINT tempstaffconstraint PRIMARY KEY (EMPLOYID);", dbSeeChanges: Call BriefDelay
+''   DoCmd.OpenQuery "qryEXPIRATIONS03"
+'    TempDB.Execute "DELETE tempstaff.* FROM tempstaff WHERE LastName = 'EXAMPLE';", dbSeeChanges: Call BriefDelay
+'
+''   Create the temporary GPSupercodes table.
+'    Call AppendProgressMessages("Emptying the temporary GP Supervisors table.")
+''   DoCmd.OpenQuery "qryEXPIRATIONS03A"
+'    TempDB.Execute "DELETE [~TempSuperCodes].* FROM [~TempSuperCodes];", dbSeeChanges: Call BriefDelay
+''   DoCmd.OpenQuery "qryEXPIRATIONS04"
+'    TempDB.Execute "INSERT INTO [~TempSuperCodes] (GPCode, GPSuperCode, JobTitle) " & _
+'        "SELECT tblStaff.DEPRTMNT, tblStaff.SUPERVISORCODE_I, tblStaff.JOBTITLE FROM tblStaff " & _
+'        "WHERE (((tblStaff.JobTitle) = 'RESUNT' OR (tblStaff.JobTitle) = 'RESUPR' OR (tblStaff.JobTitle) = 'ASDRRE' OR (tblStaff.JobTitle) = 'DASUPR' OR (tblStaff.JobTitle) = 'SENDPM')) OR " & _
+'        "(((tblStaff.DEPRTMNT) = 'CHELSE') AND ((tblStaff.JobTitle) = 'PRGMGR')) OR " & _
+'        "(((tblStaff.DEPRTMNT) = 'NEWTON') AND ((tblStaff.JobTitle) = 'PRGMGR')) OR " & _
+'        "(((tblStaff.JobTitle) = 'RESMGR')) OR (((tblStaff.JobTitle) = 'SITECO')) " & _
+'        "ORDER BY tblStaff.DEPRTMNT;", dbSeeChanges: Call BriefDelay
+'
+''   Create a temporary table for staff skills.
+'    Call AppendProgressMessages("Creating temporary table for staff skills.")
+'    Call ExpirationsHousekeeping(TempDB, 2)
+''   DoCmd.OpenQuery "qryEXPIRATIONS05"
+'    TempDB.Execute "SELECT tblStaffSkills.* INTO tempstaffskills FROM tblStaff " & _
+'        "LEFT JOIN tblStaffSkills ON tblStaff.EMPLOYID = tblStaffSkills.EMPID_I " & _
+'        "WHERE tblStaffSkills.SKILLNUMBER_I = 1 OR tblStaffSkills.SKILLNUMBER_I = 2 OR tblStaffSkills.SKILLNUMBER_I = 3 OR tblStaffSkills.SKILLNUMBER_I = 15 OR " & _
+'        "tblStaffSkills.SKILLNUMBER_I = 22 OR tblStaffSkills.SKILLNUMBER_I = 30 OR tblStaffSkills.SKILLNUMBER_I = 31 OR tblStaffSkills.SKILLNUMBER_I = 32 OR " & _
+'        "tblStaffSkills.SKILLNUMBER_I = 33 OR tblStaffSkills.SKILLNUMBER_I = 34 OR tblStaffSkills.SKILLNUMBER_I = 35 OR tblStaffSkills.SKILLNUMBER_I = 36 OR " & _
+'        "tblStaffSkills.SKILLNUMBER_I = 39;", dbSeeChanges: Call BriefDelay
+''   DoCmd.OpenQuery "qryEXPIRATIONS05A"
+'    TempDB.Execute "ALTER TABLE tempstaffskills ADD CONSTRAINT tempstaffskillsconstraint PRIMARY KEY (EMPID_I, SKILLNUMBER_I);", dbSeeChanges: Call BriefDelay
+'
+''   Empty the expirations table.
+'    Call AppendProgressMessages("Empty the Expiration Dates table.")
+''   DoCmd.OpenQuery "qryEXPIRATIONS05B"
+'    TempDB.Execute "DELETE tblExpirations.* FROM tblExpirations;", dbSeeChanges: Call BriefDelay
+'
+''   Build the program lookup table.  This looks for locations where a GPName is specified.  It goes through each program separately.
+'    Call AppendProgressMessages("Build base program lookup table.")
+''   All staff with a GP Supervisor code.  Fix blank supercodes.
+''   DoCmd.OpenQuery "qryEXPIRATIONS06"
+'    TempDB.Execute "SELECT [CityTown] & ' - ' & [LocationName] AS Location, tblLocations.CityTown, tblLocations.LocationName, tblLocations.GPName, tblPeople.GPSuperCode " & _
+'        "INTO temptbl " & _
+'        "FROM tblLocations INNER JOIN tblPeople ON (tblLocations.LocationName = tblPeople.OfficeLocationName) AND (tblLocations.CityTown = tblPeople.OfficeCityTown) " & _
+'        "WHERE tblLocations.GPName IS NOT NULL AND tblPeople.IsStaff = True " & _
+'        "ORDER BY [CityTown] & ' - ' & [LocationName]; ", dbSeeChanges: Call BriefDelay
+''   DoCmd.OpenQuery "qryEXPIRATIONS07"
+'    TempDB.Execute "UPDATE temptbl " & _
+'        "SET temptbl.GPSuperCode = DLookUp ('GPSuperCode', '~TempSuperCodes', ""GPCode='"" & [temptbl].[GPName] & ""'"") " & _
+'        "WHERE ((([temptbl].[GPSuperCode]) IS NULL));", dbSeeChanges: Call BriefDelay
+''   DoCmd.OpenQuery "qryEXPIRATIONS08"
+'    TempDB.Execute "INSERT INTO temptbl (Location, CityTown, LocationName, GPName, GPSuperCode) " & _
+'        "SELECT [CityTown] & ' - ' & [LocationName] AS Location, tblLocations.CityTown, tblLocations.LocationName, tblLocations.GPName, " & _
+'        "DLookUp ('GPSuperCode', 'tblPeople', ""FirstName='"" & tblLocations.StaffPrimaryContactFirstName & ""' AND LastName='"" & tblLocations.StaffPrimaryContactLastName & "" '"" ) AS Expr1 " & _
+'        "FROM tblLocations WHERE (((tblLocations.CityTown) <> 'Dedham') AND ((tblLocations.GPName) IS NOT NULL) AND ((tblLocations.Department) = 'Individualized Support Options')) " & _
+'        "ORDER BY [CityTown] & ' - ' & [LocationName];", dbSeeChanges: Call BriefDelay
+'
+'    Call AppendProgressMessages("Parse program lookup table.")
+'    Call AppendProgressMessages("    This takes a few minutes.")
+''   DoCmd.OpenQuery "qryEXPIRATIONS09"
+'    TempDB.Execute "SELECT IIf(IsNull([tblPeopleClientsResidentialServices]![CityTown]),'',[tblPeopleClientsResidentialServices]![CityTown] & ' - ' & [tblPeopleClientsResidentialServices]![Location]) AS LocRes, IIf(IsNull([tblPeopleClientsCLOServices]![CityTown]),'',[tblPeopleClientsCLOServices]![CityTown] & ' - ' & [tblPeopleClientsCLOServices]![Location]) AS LocCLO, IIf(IsNull([tblPeopleClientsDayServices]![CityTown]),'',[tblPeopleClientsDayServices]![CityTown] & ' - ' & [tblPeopleClientsDayServices]![LocationName]) AS LocDay, IIf(IsNull([tblPeopleClientsVocationalServices]![CityTown]),'',[tblPeopleClientsVocationalServices]![CityTown] & ' - ' & [tblPeopleClientsVocationalServices]![Location]) AS LocVoc, " & _
+'        "Null AS Supervisor, tblPeople.IndexedName, tblPeople.LastName, tblPeople.FirstName, tblPeople.MiddleInitial, tblPeopleClientsDemographics.DateISP, tblPeopleClientsDemographics.DateConsentFormsSigned, tblPeopleClientsDemographics.DateBMMExpires, tblPeopleClientsDemographics.DateBMMAccessSignedHRC, tblPeopleClientsDemographics.DateBMMAccessSigned, " & _
+'        "tblPeopleClientsDemographics.DateSPDAuthExpires, tblPeopleClientsDemographics.DateSignaturesDueBy, tblPeopleClientsDemographics.AllSPDSignaturesReceived INTO temptbl0 " & _
+'        "FROM ((((tblPeople RIGHT JOIN tblPeopleClientsDemographics ON tblPeople.IndexedName = tblPeopleClientsDemographics.IndexedName) LEFT JOIN tblPeopleClientsCLOServices ON tblPeopleClientsDemographics.IndexedName = tblPeopleClientsCLOServices.IndexedName) LEFT JOIN tblPeopleClientsDayServices ON tblPeopleClientsDemographics.IndexedName = tblPeopleClientsDayServices.IndexedName) LEFT JOIN tblPeopleClientsResidentialServices ON tblPeopleClientsDemographics.IndexedName = tblPeopleClientsResidentialServices.IndexedName) LEFT JOIN tblPeopleClientsVocationalServices ON tblPeopleClientsDemographics.IndexedName = tblPeopleClientsVocationalServices.IndexedName " & _
+'        "WHERE ((((tblPeopleClientsDemographics.ActiveDayServices)=True) AND ((tblPeopleClientsDayServices.Inactive)=False)) OR " & _
+'        "(((tblPeopleClientsDemographics.ActiveResidentialServices)=True) AND ((tblPeopleClientsResidentialServices.Inactive)=False)) OR " & _
+'        "(((tblPeopleClientsDemographics.ActiveCLO)=True) AND ((tblPeopleClientsCLOServices.Inactive)=False)) OR " & _
+'        "(((tblPeopleClientsDemographics.ActiveVocationalServices)=True) AND ((tblPeopleClientsVocationalServices.Inactive)=False))) AND tblPeople.IsDeceased = False;", dbSeeChanges: Call BriefDelay
+'
+''   CLO.
+'    Call AppendProgressMessages("Populate program lookup table with CLO information.")
+''   DoCmd.OpenQuery "qryEXPIRATIONS10"
+'    TempDB.Execute "UPDATE (temptbl0 LEFT JOIN qrytblPeopleClientsDemographics ON temptbl0.IndexedName = qrytblPeopleClientsDemographics.IndexedName) LEFT JOIN tblPeopleClientsCLOServices ON temptbl0.IndexedName = tblPeopleClientsCLOServices.IndexedName SET temptbl0.LocCLO = Null " & _
+'        "WHERE (Len(temptbl0!LocCLO)>0 And qrytblPeopleClientsDemographics.ActiveCLO=False) Or (Len(temptbl0!LocCLO)>0 And qrytblPeopleClientsDemographics.ActiveCLO=True And tblPeopleClientsCLOServices.Inactive=True);", dbSeeChanges: Call BriefDelay
+'
+''   Residential.
+'    Call AppendProgressMessages("Populate program lookup table with residential program information.")
+''   DoCmd.OpenQuery "qryEXPIRATIONS11
+'    TempDB.Execute "UPDATE (temptbl0 LEFT JOIN qrytblPeopleClientsDemographics ON temptbl0.IndexedName = qrytblPeopleClientsDemographics.IndexedName) LEFT JOIN tblPeopleClientsResidentialServices ON temptbl0.IndexedName = tblPeopleClientsResidentialServices.IndexedName SET temptbl0.LocRes = Null " & _
+'        "WHERE (((Len(temptbl0!LocRes))>0) And ((qrytblPeopleClientsDemographics.ActiveResidentialServices)=False)) Or (((Len(temptbl0!LocRes))>0) And ((qrytblPeopleClientsDemographics.ActiveResidentialServices)=True) And ((tblPeopleClientsResidentialServices.Inactive)=True));", dbSeeChanges: Call BriefDelay
+'
+''   Day.
+'    Call AppendProgressMessages("Populate program lookup table with day program information.")
+''   DoCmd.OpenQuery "qryEXPIRATIONS12"
+'    TempDB.Execute "UPDATE (temptbl0 LEFT JOIN qrytblPeopleClientsDemographics ON temptbl0.IndexedName = qrytblPeopleClientsDemographics.IndexedName) LEFT JOIN tblPeopleClientsDayServices ON temptbl0.IndexedName = tblPeopleClientsDayServices.IndexedName SET temptbl0.LocDay = Null " & _
+'        "WHERE (((Len(temptbl0!LocDay))>0) And ((qrytblPeopleClientsDemographics.ActiveDayServices)=False)) Or (((Len(temptbl0!LocDay))>0) And ((qrytblPeopleClientsDemographics.ActiveDayServices)=True) And ((tblPeopleClientsDayServices.Inactive)=True));", dbSeeChanges: Call BriefDelay
+'
+''   Vocational.
+'    Call AppendProgressMessages("Populate program lookup table with vocational program information.")
+''   DoCmd.OpenQuery "qryEXPIRATIONS13"
+'    TempDB.Execute "UPDATE (temptbl0 LEFT JOIN qrytblPeopleClientsDemographics ON temptbl0.IndexedName = qrytblPeopleClientsDemographics.IndexedName) LEFT JOIN tblPeopleClientsVocationalServices ON temptbl0.IndexedName = tblPeopleClientsVocationalServices.IndexedName SET temptbl0.LocVoc = Null " & _
+'        "WHERE (((Len(temptbl0!LocVoc))>0) And ((qrytblPeopleClientsDemographics.ActiveVocationalServices)=False)) Or (((Len(temptbl0!LocVoc))>0) And ((qrytblPeopleClientsDemographics.ActiveVocationalServices)=True) And ((tblPeopleClientsVocationalServices.Inactive)=True));", dbSeeChanges: Call BriefDelay
+'
+''   Populate house information.
+'    Call AppendProgressMessages("Populate house information.")
+''   DoCmd.OpenQuery "qryEXPIRATIONS14"
+'    TempDB.Execute "INSERT INTO tblExpirations (Location, RecordType, LastName, FirstName, Supervisor, LastVehicleChecklistCompleted, MostRecentAsleepFireDrill, NextRecentAsleepFireDrill, " & _
+'        "HouseSafetyPlanExpires, HousePlansReviewedByStaffBefore, DAYStaffTrainedInPrivacyBefore, DAYAllPlansReviewedByStaffBefore, DAYQtrlySafetyChecklistDueBy, MAPChecklistCompleted, " & _
+'        "HumanRightsOfficer, HROTrainsStaffBefore, HROTrainsIndividualsBefore, FireSafetyOfficer, FSOTrainsStaffBefore, FSOTrainsIndividualsBefore) " & _
+'        "SELECT tblLocations.GPName AS Location, 'House' AS RecordType, '*' AS LastName, '*' AS FirstName, " & _
+'        "DLookUp ('GPSuperCode', 'temptbl', ""GPName='"" & tblLocations.GPName & ""'"") AS Supervisor, " & _
+'        "tblLocations.LastVehicleChecklistCompleted, tblLocations.MostRecentAsleepFireDrill, tblLocations.NextRecentAsleepFireDrill, tblLocations.HouseSafetyPlanExpires," & _
+'        "tblLocations.HousePlansReviewedByStaffBefore, tblLocations.DAYStaffTrainedInPrivacyBefore, tblLocations.DAYAllPlansReviewedByStaffBefore, tblLocations.DAYQtrlySafetyChecklistDueBy, " & _
+'        "tblLocations.MAPChecklistCompleted, tblLocations.HumanRightsOfficer, tblLocations.HROTrainsStaffBefore, tblLocations.HROTrainsIndividualsBefore, " & _
+'        "tblLocations.FireSafetyOfficer, tblLocations.FSOTrainsStaffBefore, tblLocations.FSOTrainsIndividualsBefore FROM tblLocations " & _
+'        "WHERE tblLocations.GPName IS NOT NULL AND DLookUp('GPSuperCode', 'temptbl', 'GPName=""' & tblLocations.GPName & '""') IS NOT NULL AND " & _
+'        "tblLocations.Department <> 'Clinical and Support Services' ORDER BY tblLocations.GPName;", dbSeeChanges: Call BriefDelay
+'    Call AppendProgressMessages("Populate CLO client information.")
+''   DoCmd.OpenQuery "qryEXPIRATIONS15"
+'    TempDB.Execute "INSERT INTO tblExpirations (Location, RecordType, LastName, FirstName, Supervisor, DateISP, DateConsentFormsSigned, DateBMMExpires, DateBMMAccessSignedHRC, DateBMMAccessSigned, DateSPDAuthExpires, DateSignaturesDueBy, AllSPDSignaturesReceived) " & _
+'        "SELECT DLookUp (""GPName"", ""temptbl"", ""Location='"" & [LocCLO] & ""'"") AS Location, 'Client' AS RecordType, temptbl0.LastName, temptbl0.FirstName, " & _
+'        "DLookUp (""GPSuperCode"", ""temptbl"", ""Location='"" & [LocCLO] & ""'"") AS Supervisor, temptbl0.DateISP, temptbl0.DateConsentFormsSigned, temptbl0.DateBMMExpires, " & _
+'        "temptbl0.DateBMMAccessSignedHRC, temptbl0.DateBMMAccessSigned, temptbl0.DateSPDAuthExpires, temptbl0.DateSignaturesDueBy, temptbl0.AllSPDSignaturesReceived " & _
+'        "FROM temptbl0 " & _
+'        "WHERE (((DLookUp(""GPName"", ""temptbl"", ""Location='"" & [LocCLO] & ""'"")) IS NOT NULL) AND ((temptbl0.LastName) IS NOT NULL) AND ((temptbl0.FirstName) IS NOT NULL));", dbSeeChanges: Call BriefDelay
+'    Call AppendProgressMessages("Populate residential client information.")
+''   DoCmd.OpenQuery "qryEXPIRATIONS16"
+'    TempDB.Execute "INSERT INTO tblExpirations (Location, RecordType, LastName, FirstName, Supervisor, DateISP, DateConsentFormsSigned, DateBMMExpires, DateBMMAccessSignedHRC, DateBMMAccessSigned, DateSPDAuthExpires, DateSignaturesDueBy, AllSPDSignaturesReceived) " & _
+'        "SELECT DLookUp(""GPName"", ""temptbl"", ""Location='"" & [LocRes] & ""'"") AS Location, 'Client' AS RecordType, temptbl0.LastName, temptbl0.FirstName, " & _
+'        "DLookUp (""GPSuperCode"", ""temptbl"", ""Location='"" & [LocRes] & ""'"") AS Supervisor, temptbl0.DateISP, temptbl0.DateConsentFormsSigned, temptbl0.DateBMMExpires, temptbl0.DateBMMAccessSignedHRC, temptbl0.DateBMMAccessSigned, temptbl0.DateSPDAuthExpires, temptbl0.DateSignaturesDueBy, temptbl0.AllSPDSignaturesReceived " & _
+'        "FROM temptbl0 " & _
+'        "WHERE (((DLookUp(""GPName"", ""temptbl"", ""Location='"" & [LocRes] & ""'"")) IS NOT NULL) AND ((temptbl0.LastName) IS NOT NULL) AND ((temptbl0.FirstName) IS NOT NULL));", dbSeeChanges: Call BriefDelay
+'    Call AppendProgressMessages("Populate vocational client information.")
+''   DoCmd.OpenQuery "qryEXPIRATIONS17"
+'    TempDB.Execute "INSERT INTO tblExpirations (Location, RecordType, LastName, FirstName, Supervisor, DateISP, DateConsentFormsSigned, DateBMMExpires, DateBMMAccessSignedHRC, DateBMMAccessSigned, DateSPDAuthExpires, DateSignaturesDueBy, AllSPDSignaturesReceived) " & _
+'        "SELECT DLookUp(""GPName"", ""temptbl"", ""Location='"" & [LocVoc] & ""'"") AS Location, 'Client' AS RecordType, temptbl0.LastName, temptbl0.FirstName," & _
+'        "DLookUp(""GPSuperCode"", ""temptbl"", ""Location='"" & [LocVoc] & ""'"") AS Supervisor, temptbl0.DateISP, temptbl0.DateConsentFormsSigned, temptbl0.DateBMMExpires, temptbl0.DateBMMAccessSignedHRC, temptbl0.DateBMMAccessSigned, temptbl0.DateSPDAuthExpires, temptbl0.DateSignaturesDueBy, temptbl0.AllSPDSignaturesReceived " & _
+'        "FROM temptbl0 " & _
+'        "WHERE (((DLookUp(""GPName"", ""temptbl"", ""Location='"" & [LocVoc] & ""'"")) IS NOT NULL) AND ((temptbl0.LastName) IS NOT NULL) AND ((temptbl0.FirstName) IS NOT NULL));", dbSeeChanges: Call BriefDelay
+'
+''   Populate staff information.
+'    Call AppendProgressMessages("Populate staff information.")
+''   DoCmd.OpenQuery "qryEXPIRATIONS18"
+'    TempDB.Execute "INSERT INTO tblExpirations ( Location, RecordType, LastName, FirstName, JobTitle, Supervisor, AdjustedStartDate ) " & _
+'        "SELECT [tempstaff]![DEPRTMNT] AS Location, 'Staff' AS RecordType, tempstaff.LASTNAME, tempstaff.FRSTNAME, tempstaff.JOBTITLE, tempstaff.SUPERVISORCODE_I, tempstaff.BENADJDATE AS AdjustedStartDate " & _
+'        "FROM tempstaff INNER JOIN tempstaffskills ON tempstaff.EMPLOYID = tempstaffskills.EMPID_I " & _
+'        "WHERE tempstaff.DEPRTMNT Is Not Null And tempstaff.LastName Is Not Null And tempstaff.FRSTNAME Is Not Null " & _
+'        "ORDER BY tempstaff.LASTNAME, tempstaff.FRSTNAME;", dbSeeChanges: Call BriefDelay
+'
+''   Update staff information.
+'    Call AppendProgressMessages("Populate staff skills information and descriptors.")
+'    Call AppendProgressMessages("    This takes a few minutes.")
+''   DoCmd.OpenQuery "qryEXPIRATIONS19"
+'    TempDB.Execute "SELECT tempstaffskills.EMPID_I, tempstaffskills.SKILLNUMBER_I, tempstaffskills.EXPIREDSKILL_I INTO temptbl1 " & _
+'        "FROM tempstaffskills INNER JOIN tblStaff ON tempstaffskills.EMPID_I = tblStaff.EMPLOYID " & _
+'        "WHERE tempstaffskills.SKILLNUMBER_I = 1 OR tempstaffskills.SKILLNUMBER_I = 2 OR tempstaffskills.SKILLNUMBER_I = 3 OR tempstaffskills.SKILLNUMBER_I = 15 " & _
+'        "OR tempstaffskills.SKILLNUMBER_I = 22 OR tempstaffskills.SKILLNUMBER_I = 30 OR tempstaffskills.SKILLNUMBER_I = 31  OR tempstaffskills.SKILLNUMBER_I = 32 " & _
+'        "OR tempstaffskills.SKILLNUMBER_I = 33 OR tempstaffskills.SKILLNUMBER_I = 34 OR tempstaffskills.SKILLNUMBER_I = 35 OR tempstaffskills.SKILLNUMBER_I = 36 OR tempstaffskills.SKILLNUMBER_I = 39;", dbSeeChanges: Call BriefDelay
+''   DoCmd.OpenQuery "qryEXPIRATIONS20"
+'    TempDB.Execute "SELECT temptbl1.*, DLookUp(""Skill"", ""catSkills"", ""SkillID="" & [SKILLNUMBER_I]) AS SkillDesc INTO temptbl2 FROM temptbl1;", dbSeeChanges: Call BriefDelay
+'
+'    Call AppendProgressMessages("Crosstabulate staff skills.")
+''   DoCmd.OpenQuery "qryEXPIRATIONS21"
+'    TempDB.Execute "SELECT * INTO temptbl3 FROM qryExpirationsStaffBySkills;", dbSeeChanges: Call BriefDelay
+'
+'    Call AppendProgressMessages("Populate expirations table with staff skills.")
+''   DoCmd.OpenQuery "qryEXPIRATIONS22"
+'    TempDB.Execute "UPDATE qrytblExpirations INNER JOIN temptbl3 ON (qrytblExpirations.FirstName = temptbl3.FRSTNAME) AND (qrytblExpirations.LastName = temptbl3.LASTNAME) AND (qrytblExpirations.Location = temptbl3.DEPRTMNT) " & _
+'        "SET qrytblExpirations.CPR = [temptbl3].[CPR], qrytblExpirations.FirstAid = [temptbl3].[FirstAid], qrytblExpirations.MAPCert = [temptbl3].[MAPCert], " & _
+'        "qrytblExpirations.DriversLicense = [temptbl3].[DriversLicense], qrytblExpirations.BBP = [temptbl3].[BBP], qrytblExpirations.BackInjuryPrevention = [temptbl3].[BackInjuryPrevention], " & _
+'        "qrytblExpirations.SafetyCares = [temptbl3].[SafetyCares], qrytblExpirations.TB = [temptbl3].[TB], qrytblExpirations.WorkplaceViolence = [temptbl3].[WorkplaceViolence], qrytblExpirations.DefensiveDriving = [temptbl3].[DefensiveDriving], " & _
+'        "qrytblExpirations.WheelchairSafety = [temptbl3].[WheelchairSafety], qrytblExpirations.PBS = [temptbl3].[PBS], qrytblExpirations.ProfessionalLicenses = [temptbl3].[ProfLic] " & _
+'        "WHERE (((qrytblExpirations.RecordType) = 'Staff'));", dbSeeChanges: Call BriefDelay
+'
+'    Call AppendProgressMessages("Populate expiration dates table with staff evals and supervisions.")
+''   DoCmd.OpenQuery "qryEXPIRATIONS23"
+'    TempDB.Execute "UPDATE qrytblExpirations INNER JOIN qrytblStaffEvalsAndSupervisions ON (qrytblExpirations.FirstName = qrytblStaffEvalsAndSupervisions.FirstName) AND (qrytblExpirations.LastName = qrytblStaffEvalsAndSupervisions.LastName) SET qrytblExpirations.ThreeMonthEvaluation = [qrytblStaffEvalsAndSupervisions]![ThreeMonthEval], qrytblExpirations.EvalDueBy = [qrytblStaffEvalsAndSupervisions]![EvalDueBy], qrytblExpirations.LastSupervision = [qrytblStaffEvalsAndSupervisions]![LastSupervision], qrytblExpirations.OnLeave = [qrytblStaffEvalsAndSupervisions]![OnLeave] " & _
+'        "WHERE qrytblExpirations.RecordType='Staff';", dbSeeChanges: Call BriefDelay
+'
+''   Finally, see if we can add supervisor expirations to their own report.
+'    Call AppendProgressMessages("Add supervisor's expirations to table.")
+''   DoCmd.OpenQuery "qryEXPIRATIONS24"
+'    TempDB.Execute "INSERT INTO tblExpirations (Location, RecordType, LastName, FirstName, Supervisor, JobTitle, AdjustedStartDate, LastVehicleChecklistCompleted, MostRecentAsleepFireDrill, NextRecentAsleepFireDrill, HouseSafetyPlanExpires, HousePlansReviewedByStaffBefore, DAYStaffTrainedInPrivacyBefore, DAYAllPlansReviewedByStaffBefore, DAYQtrlySafetyChecklistDueBy, MAPChecklistCompleted, HumanRightsOfficer, HROTrainsStaffBefore, HROTrainsIndividualsBefore, FireSafetyOfficer, FSOTrainsStaffBefore, FSOTrainsIndividualsBefore, DateISP, DateConsentFormsSigned, DateBMMExpires, DateBMMAccessSignedHRC, DateBMMAccessSigned, DateSPDAuthExpires, DateSignaturesDueBy, AllSPDSignaturesReceived, BBP, BackInjuryPrevention, CPR, DefensiveDriving, DriversLicense, FirstAid, MAPCert, PBS, SafetyCares, TB, WheelchairSafety, WorkplaceViolence, ProfessionalLicenses, ThreeMonthEvaluation, EvalDueBy, LastSupervision, OnLeave ) " & _
+'        "SELECT tblLocations.GPName, 'Staff' AS RecordType, tblExpirations.LastName, tblExpirations.FirstName, tblPeople.GPSuperCode AS Supervisor, tblExpirations.JobTitle, tblExpirations.AdjustedStartDate, tblExpirations.LastVehicleChecklistCompleted, tblExpirations.MostRecentAsleepFireDrill, tblExpirations.NextRecentAsleepFireDrill, tblExpirations.HouseSafetyPlanExpires, tblExpirations.HousePlansReviewedByStaffBefore, tblExpirations.DAYStaffTrainedInPrivacyBefore, tblExpirations.DAYAllPlansReviewedByStaffBefore, tblExpirations.DAYQtrlySafetyChecklistDueBy, tblExpirations.MAPChecklistCompleted, tblExpirations.HumanRightsOfficer, tblExpirations.HROTrainsStaffBefore, tblExpirations.HROTrainsIndividualsBefore, tblExpirations.FireSafetyOfficer, tblExpirations.FSOTrainsStaffBefore, tblExpirations.FSOTrainsIndividualsBefore, tblExpirations.DateISP, tblExpirations.DateConsentFormsSigned, tblExpirations.DateBMMExpires, tblExpirations.DateBMMAccessSignedHRC, " & _
+'        "tblExpirations.DateBMMAccessSigned , tblExpirations.DateSPDAuthExpires , tblExpirations.DateSignaturesDueBy, tblExpirations.AllSPDSignaturesReceived, tblExpirations.BBP, tblExpirations.BackInjuryPrevention, tblExpirations.CPR, tblExpirations.DefensiveDriving, tblExpirations.DriversLicense, tblExpirations.FirstAid, tblExpirations.MAPCert, tblExpirations.PBS, tblExpirations.SafetyCares, tblExpirations.TB, tblExpirations.WheelchairSafety, tblExpirations.WorkplaceViolence, tblExpirations.ProfessionalLicenses, tblExpirations.ThreeMonthEvaluation, tblExpirations.EvalDueBy, tblExpirations.LastSupervision, tblExpirations.OnLeave " & _
+'        "FROM (tblLocations INNER JOIN tblPeople ON tblLocations.StaffPrimaryContactIndexedName = tblPeople.IndexedName) INNER JOIN tblExpirations ON (tblPeople.FirstName = tblExpirations.FirstName) AND (tblPeople.LastName = tblExpirations.LastName) " & _
+'        "WHERE (((tblLocations.GPName) Is Not Null) And ((tblPeople.GPSuperCode) Is Not Null) And ((tblLocations.Department) = 'Residential Services' OR (tblLocations.Department) = 'Day Services' Or (tblLocations.Department) = 'Vocational Services' Or (tblLocations.Department) = 'TILL NH' Or (tblLocations.Department) = 'Expirations Reporting') And ((Right(tblLocations!StaffPrimaryContactIndexedName, 5)) <> 'TBD//')) Or (((tblLocations.GPName) Is Not Null) And ((tblPeople.GPSuperCode) Is Not Null) And ((tblLocations.CityTown) <> 'Dedham') And ((tblLocations.Department) = 'Individualized Support Options') And ((Right(tblLocations!StaffPrimaryContactIndexedName, 5)) <> 'TBD//')) " & _
+'        "ORDER BY tblLocations.CityTown;", dbSeeChanges: Call BriefDelay
+'
+''   Here, produce the report.
+'    Call AppendProgressMessages("Generating the report.")
+''   Call ExecReport("rptEXPIRATIONDATES"): Call BriefDelay
+''   We export the report to a PDF without displaying it.
+'    ExportFileName = Application.CurrentProject.Path & "\" & "TILLDB-Report-ExpirationDates-" & Format(Date, "yyyymmdd") & ".pdf"
+'    If IsFileOpen(ExportFileName) Then
+'        If MsgBox(ExportFileName & " is already open.  Please close it and click OK to continue or Cancel to abort.", vbOKCancel, "ERROR!") = vbCancel Then
+'            MsgBox "Export aborted.", vbOKOnly, "Aborted"
+'        Else
+'            If Dir(ExportFileName) <> "" Then Kill ExportFileName
+'            DoCmd.OutputTo acOutputReport, "rptEXPIRATIONSDATES", acFormatPDF, ExportFileName, False
+'        MsgBox "The requested report has been exported to " & ExportFileName & "." & vbCrLf & vbCrLf & "This export may contain information that is protected under HIPAA and other privacy laws.  This export must be securely stored at all times and must be deleted when no longer being used.", _
+'            vbOKOnly, "Export Complete"
+'        End If
+'    Else
+'        If Dir(ExportFileName) <> "" Then Kill ExportFileName
+'        DoCmd.OutputTo acOutputReport, "rptEXPIRATIONDATES", acFormatPDF, ExportFileName, False
+'        MsgBox "The requested report has been exported to " & ExportFileName & "." & vbCrLf & vbCrLf & "This export may contain information that is protected under HIPAA and other privacy laws.  This export must be securely stored at all times and must be deleted when no longer being used.", _
+'            vbOKOnly, "Export Complete"
+'    End If
+'
+''   Empty the Expiration Dates table.
+'    Call AppendProgressMessages("Cleanup.")
+'    Call ExpirationsHousekeeping(TempDB, 1): Call ExpirationsHousekeeping(TempDB, 2)
+''   DoCmd.OpenQuery "qryEXPIRATIONS25"
+'    TempDB.Execute "DELETE tblExpirations.* FROM tblExpirations;", dbSeeChanges: Call BriefDelay
+''   DoCmd.OpenQuery "qryEXPIRATIONS26"
+'    TempDB.Execute "DELETE [~TempSuperCodes].* FROM [~TempSuperCodes];", dbSeeChanges: Call BriefDelay
+'
+'    Form_frmRpt.ProgressMessages = "": Form_frmRpt.ProgressMessages.Requery
+'    Call DropTempTables
+'
+'    DoCmd.SetWarnings True
+'    SysCmdResult = SysCmd(5)
+'    Exit Function
+'ShowMeError:
+'    Call DropTempTables
+'    Call ExpirationsHousekeeping(TempDB, 1): Call ExpirationsHousekeeping(TempDB, 2)
+''   DoCmd.OpenQuery "qryEXPIRATIONS25"
+'    TempDB.Execute "DELETE tblExpirations.* FROM tblExpirations;", dbSeeChanges: Call BriefDelay
+''   DoCmd.OpenQuery "qryEXPIRATIONS26"
+'    TempDB.Execute "DELETE [~TempSuperCodes].* FROM [~TempSuperCodes];", dbSeeChanges: Call BriefDelay
+'    Err.Source = "PublicSubroutines" & "(Line #" & Str(Err.Erl) & ")": TILLDBErrorMessage = "Error # " & Str(Err.Number) & " was generated by " & Err.Source & Chr(13) & Err.Description
+'    MsgBox TILLDBErrorMessage, vbOKOnly, "Error", Err.HelpFile, Err.HelpContext
+'    If ExpDatesReportInitiatedFromReportsMenu Then
+'        Form_frmRpt.ProgressMessages = "": Form_frmRpt.ProgressMessages.Requery
+'    Else
+'        SysCmdResult = SysCmd(5)
+'    End If
+'    DoCmd.SetWarnings True
+'End Function
 
 Public Function RunRedReportNew(SupervisionsOnly As Boolean)
     Dim TempDB As Database
