@@ -8,9 +8,7 @@
 
 ## Azure SQL Connection Details
 - **Server:** tillsqlserver.database.windows.net
-- **User:** tillsqladmin
-- **Password:** Purpl3R31gn
-- **Database Type:** Azure SQL Database
+- **Database:** TILLDBWEB_Prod (configure credentials in `.env`; see project root `.env.example`)
 
 ---
 
@@ -136,7 +134,7 @@ Complete VBA code was successfully extracted including all forms, reports, and s
 **Standard Modules (2)**
 - `Utilities.vba` - 232 lines (utility functions)
 - `AddressValidation.vba` - Address validation functions
-- `Expirations.vba` - Expiration management functions
+- `Expirations_Updated.vba` (Expirations module) - Expiration management functions
 
 **Form Modules (53)**
 

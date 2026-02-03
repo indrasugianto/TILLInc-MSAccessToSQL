@@ -1,7 +1,8 @@
 # Import and Use VBA Module - Quick Guide
 
 **Module:** `ModReportFieldManager.vba`  
-**Purpose:** Automate adding/removing hidden fields to/from reports
+**Purpose:** Automate adding/removing hidden fields to/from reports  
+**Last updated:** February 2, 2026
 
 ---
 
@@ -44,21 +45,23 @@ Once imported, you have these functions available:
 
 | Function | What It Does | When to Use |
 |----------|--------------|-------------|
-| `FixAllReports()` | Adds fields to all 3 subreports | Quick implementation |
-| `FixClientsReport()` | Adds fields to Clients report only | Fix one report |
-| `FixDayReport()` | Adds fields to Day report only | Fix one report |
-| `FixHouseReport()` | Adds fields to House report only | Fix one report |
-| `ImplementCompleteOptimization()` | Complete implementation with prompts | Full automation |
+| `FixAllReports()` | Adds fields to all four subreports | Quick implementation |
+| `FixClientsReport()` | Clients report only | Fix one report |
+| `FixDayReport()` | Day report only | Fix one report |
+| `FixHouseReport()` | House report only | Fix one report |
+| `FixStaffReport()` | Staff report only | Fix Staff report |
+| `ImplementCompleteOptimization()` | All four with prompts | Full automation |
 
 ### 🗑️ Cleanup/Rollback Functions
 
 | Function | What It Does | When to Use |
 |----------|--------------|-------------|
-| `RemoveAllHiddenFields()` | Removes fields from all 3 subreports | Complete rollback |
-| `RemoveFieldsFromClientsReport()` | Removes fields from Clients report | Partial rollback |
-| `RemoveFieldsFromDayReport()` | Removes fields from Day report | Partial rollback |
-| `RemoveFieldsFromHouseReport()` | Removes fields from House report | Partial rollback |
-| `RollbackCompleteOptimization()` | Complete rollback with prompts | Full rollback |
+| `RemoveAllHiddenFields()` | Removes fields from all four subreports | Complete rollback |
+| `RemoveFieldsFromClientsReport()` | Clients only | Partial rollback |
+| `RemoveFieldsFromDayReport()` | Day only | Partial rollback |
+| `RemoveFieldsFromHouseReport()` | House only | Partial rollback |
+| `RemoveFieldsFromStaffReport()` | Staff only | Partial rollback |
+| `RollbackCompleteOptimization()` | Full rollback with prompts | Complete rollback |
 
 ### 🔍 Diagnostic Functions
 
@@ -211,7 +214,7 @@ The module sets `ControlSource = fieldName` (no equals sign prefix) - this is co
 
 When setting manually in Design View, you DO use the equals sign: `=[DateISP_Display]`
 
-### 4. Safe to Run Multiple Times
+### 5. Safe to Run Multiple Times
 
 The functions check if fields already exist before adding:
 - Won't create duplicates
@@ -252,6 +255,51 @@ The functions check if fields already exist before adding:
 4. Copy all code
 5. Paste into the blank module
 6. Save
+
+### Error: "You can't assign a value to this object" (on fmtDate.Value = displayValue)
+
+**Cause:** In Access **reports**, controls that are **bound** (ControlSource set to a field) get their value from the record source. Assigning `.Value` in the Format event is not allowed and causes this error.
+
+**Fix:** Remove the line `fmtDate.Value = displayValue` from your `FormatExpirationField()` helper. The hidden text box is bound to the _Display field, so the value is already there. Only set visibility and call `ApplyColorFormatting()`.
+
+Correct `FormatExpirationField` (when showDate = 1):
+```vba
+txtLabel.Visible = False
+fmtDate.Visible = True
+Call ApplyColorFormatting(fmtDate, colorCode)
+```
+Do **not** use `fmtDate.Value = displayValue`.
+
+### Error: "Can't find the field '…' referred to in your expression"
+
+**Cause:** The report’s RecordSource doesn’t expose that column. Either the subreport is still bound to `tblExpirations`/`qrytblExpirations` (which don’t have the _Display, _Color, _ShowDate columns), or the linked table for `vw_ExpirationsFormatted` was created before those columns existed and wasn’t refreshed.
+
+**Fix:**
+1. **Set RecordSource to the view**  
+   For **rptEXPIRATIONDATESday** (and the other subreports):  
+   - Open the report in Design View.  
+   - Open the Property Sheet (F4).  
+   - Select the report (click the square at the top-left where the rulers meet).  
+   - Set **Record Source** to `vw_ExpirationsFormatted`.  
+   - Save and close.
+
+2. **Refresh the linked table** so Access sees the new columns:  
+   - **External Data** → **Linked Table Manager**.  
+   - Select the link to `vw_ExpirationsFormatted` (or **Select All** if you prefer).  
+   - Click **OK** and let Access refresh.  
+   - Close Linked Table Manager.
+
+3. **Add the hidden controls** (if you haven’t already):  
+   - In VBA, run `FixDayReport()` or `FixAllReports()` from `ModReportFieldManager` so the Day report has the hidden textboxes for the _Display_Day, _Color_Day, _ShowDate_Day fields.
+
+4. **Confirm the view on SQL Server** has the column:  
+   ```sql
+   SELECT TOP 1 LastVehicleChecklistCompleted_ShowDate_Day,
+                 LastVehicleChecklistCompleted_Display_Day,
+                 LastVehicleChecklistCompleted_Color_Day
+   FROM vw_ExpirationsFormatted;
+   ```  
+   If this fails, redeploy `vw_ExpirationsFormatted.sql` on Azure SQL.
 
 ### Function runs but fields still missing
 

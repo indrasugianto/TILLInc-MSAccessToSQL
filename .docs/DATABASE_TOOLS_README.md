@@ -12,15 +12,15 @@ pip install -r requirements.txt
 
 ### 2. Configure Database Connection
 
-The `.env` file contains your Azure SQL credentials:
+Copy `.env.example` to `.env` and set your Azure SQL credentials:
 ```
-AZURE_SQL_SERVER=tillsqlserver.database.windows.net
-AZURE_SQL_DATABASE=TILLDBWEB_Prod
-AZURE_SQL_USER=tillsqladmin
-AZURE_SQL_PASSWORD=Purpl3R31gn
+AZURE_SQL_SERVER=your_server.database.windows.net
+AZURE_SQL_DATABASE=your_database
+AZURE_SQL_USER=your_username
+AZURE_SQL_PASSWORD=your_password
 ```
 
-⚠️ **IMPORTANT:** The `.env` file is in `.gitignore` and will NOT be committed to git.
+⚠️ **IMPORTANT:** The `.env` file is in `.gitignore` and will NOT be committed. See `.env.example` for the template.
 
 ## 🛠️ Available Tools
 
@@ -255,6 +255,6 @@ if __name__ == "__main__":
 
 ---
 
-**Last Updated:** January 29, 2026  
+**Last updated:** February 2, 2026  
 **Database:** TILLDBWEB_Prod  
 **Server:** tillsqlserver.database.windows.net

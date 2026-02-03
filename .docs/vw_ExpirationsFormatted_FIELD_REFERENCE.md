@@ -1,6 +1,7 @@
 # vw_ExpirationsFormatted - Field Reference
 
-Quick reference for developers working with the pre-calculated Expirations view.
+Quick reference for developers working with the pre-calculated Expirations view.  
+**Last updated:** February 2, 2026
 
 ---
 
@@ -32,11 +33,10 @@ Some fields have separate calculations for Day and Residential programs:
 | `DateISP_Color` | VARCHAR | Color code | "RED", "GREEN", "NORMAL" |
 | `DateISP_ShowDate` | BIT | Show date (1) or text (0) | 1, 0 |
 
-**VBA Usage:**
+**VBA Usage:** (do not set .Value on bound report controls)
 ```vba
 If DateISP_ShowDate = 1 Then
     DateISPFmt.Visible = True
-    DateISPFmt.Value = DateISP_Display
     Call ApplyColorFormatting(DateISPFmt, DateISP_Color)
 Else
     NextISPTxt.Visible = True
@@ -53,14 +53,14 @@ End If
 | `PSDue_Color` | VARCHAR | Color code (includes STRIKETHROUGH) | "GREEN", "STRIKETHROUGH", "NORMAL" |
 | `PSDue_ShowText` | BIT | Show text (1) or date (0) | 0, 1 |
 
-**VBA Usage:**
+**VBA Usage:** (do not set .Value on bound report controls)
 ```vba
 If PSDue_ShowText = 1 Then
     PSDueTxt.Visible = True
     PSDueTxt.Caption = PSDue_Display
 Else
     PSDueFmt.Visible = True
-    PSDueFmt.Value = PSDue_Display
+    Call ApplyColorFormatting(PSDueFmt, PSDue_Color)
     PSStrikeThru.Visible = (PSDue_Color = "STRIKETHROUGH")
 End If
 ```
@@ -348,10 +348,9 @@ End Sub
 Private Sub FormatExpirationField(showDate As Integer, displayValue As String, _
                                   colorCode As String, txtLabel As Control, fmtDate As Control)
     If showDate = 1 Then
-        ' Show the date field
+        ' Show date: fmtDate is bound (ControlSource = field); do NOT set .Value (causes error in reports)
         txtLabel.Visible = False
         fmtDate.Visible = True
-        fmtDate.Value = displayValue
         Call ApplyColorFormatting(fmtDate, colorCode)
     Else
         ' Show the text label (Missing/Optional/N/A/Pending)

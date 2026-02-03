@@ -10,7 +10,7 @@ Option Explicit
 ' Created: 2026-01-30
 '
 ' Usage:
-'   To ADD fields:     Run FixDayReport(), FixClientsReport(), FixHouseReport()
+'   To ADD fields:     Run FixDayReport(), FixClientsReport(), FixHouseReport(), FixStaffReport()
 '   To REMOVE fields:  Run RemoveFieldsFromDayReport(), etc.
 '   To REMOVE all:     Run RemoveAllHiddenFields()
 ' =============================================
@@ -223,15 +223,42 @@ Sub FixHouseReport()
     Call AddHiddenFieldsToReport("rptEXPIRATIONDATEShouse", fieldList)
 End Sub
 
+Sub FixStaffReport()
+    Dim fieldList As String
+
+    ' First, ensure RecordSource is correct
+    Call UpdateRecordSource("rptEXPIRATIONDATESstaff", "vw_ExpirationsFormatted")
+
+    ' Add all Staff calculated fields (from vw_ExpirationsFormatted Staff section)
+    fieldList = "BBP_Display,BBP_Color,BBP_ShowDate," & _
+                "BackInjuryPrevention_Display,BackInjuryPrevention_Color,BackInjuryPrevention_ShowDate," & _
+                "CPR_Display,CPR_Color,CPR_ShowDate," & _
+                "DefensiveDriving_Display,DefensiveDriving_Color,DefensiveDriving_ShowDate," & _
+                "DriversLicense_Display,DriversLicense_Color,DriversLicense_ShowDate," & _
+                "FirstAid_Display,FirstAid_Color,FirstAid_ShowDate," & _
+                "PBS_Display,PBS_Color,PBS_ShowDate," & _
+                "SafetyCares_Display,SafetyCares_Color,SafetyCares_ShowDate," & _
+                "TB_Display,TB_Color,TB_ShowDate," & _
+                "WheelchairSafety_Display,WheelchairSafety_Color,WheelchairSafety_ShowDate," & _
+                "WorkplaceViolence_Display,WorkplaceViolence_Color,WorkplaceViolence_ShowDate," & _
+                "ProfessionalLicenses_Display,ProfessionalLicenses_Color,ProfessionalLicenses_ShowDate," & _
+                "MAPCert_Display,MAPCert_Color,MAPCert_ShowDate," & _
+                "EvalDueBy_Display,EvalDueBy_Color,EvalDueBy_ShowDate," & _
+                "LastSupervision_Display,LastSupervision_Color,LastSupervision_ShowDate"
+
+    Call AddHiddenFieldsToReport("rptEXPIRATIONDATESstaff", fieldList)
+End Sub
+
 Sub FixAllReports()
-    ' Fixes all three subreports at once
-    MsgBox "This will add hidden fields to all three subreports." & vbCrLf & _
+    ' Fixes all four subreports at once
+    MsgBox "This will add hidden fields to all four subreports." & vbCrLf & _
            "This may take 1-2 minutes. Please wait...", vbInformation, "Processing"
-    
+
     Call FixClientsReport
     Call FixDayReport
     Call FixHouseReport
-    
+    Call FixStaffReport
+
     MsgBox "All subreports updated successfully!" & vbCrLf & _
            "You can now test the main report.", vbInformation, "Complete"
 End Sub
@@ -277,20 +304,40 @@ Sub RemoveFieldsFromHouseReport()
         "HumanRightsOfficer_Formatted,HumanRightsOfficer_IsBlank,FireSafetyOfficer_Formatted,FireSafetyOfficer_IsBlank")
 End Sub
 
+Sub RemoveFieldsFromStaffReport()
+    Call DeleteHiddenFieldsFromReport("rptEXPIRATIONDATESstaff", _
+        "BBP_Display,BBP_Color,BBP_ShowDate," & _
+        "BackInjuryPrevention_Display,BackInjuryPrevention_Color,BackInjuryPrevention_ShowDate," & _
+        "CPR_Display,CPR_Color,CPR_ShowDate," & _
+        "DefensiveDriving_Display,DefensiveDriving_Color,DefensiveDriving_ShowDate," & _
+        "DriversLicense_Display,DriversLicense_Color,DriversLicense_ShowDate," & _
+        "FirstAid_Display,FirstAid_Color,FirstAid_ShowDate," & _
+        "PBS_Display,PBS_Color,PBS_ShowDate," & _
+        "SafetyCares_Display,SafetyCares_Color,SafetyCares_ShowDate," & _
+        "TB_Display,TB_Color,TB_ShowDate," & _
+        "WheelchairSafety_Display,WheelchairSafety_Color,WheelchairSafety_ShowDate," & _
+        "WorkplaceViolence_Display,WorkplaceViolence_Color,WorkplaceViolence_ShowDate," & _
+        "ProfessionalLicenses_Display,ProfessionalLicenses_Color,ProfessionalLicenses_ShowDate," & _
+        "MAPCert_Display,MAPCert_Color,MAPCert_ShowDate," & _
+        "EvalDueBy_Display,EvalDueBy_Color,EvalDueBy_ShowDate," & _
+        "LastSupervision_Display,LastSupervision_Color,LastSupervision_ShowDate")
+End Sub
+
 Sub RemoveAllHiddenFields()
-    ' Removes all hidden fields from all three subreports
+    ' Removes all hidden fields from all four subreports
     ' Use this for complete rollback
     
     Dim response As VbMsgBoxResult
     
-    response = MsgBox("This will remove all hidden fields from all three subreports." & vbCrLf & _
+    response = MsgBox("This will remove all hidden fields from all four subreports." & vbCrLf & _
                       "Are you sure you want to continue?", vbYesNo + vbQuestion, "Confirm Cleanup")
-    
+
     If response = vbYes Then
         Call RemoveFieldsFromClientsReport
         Call RemoveFieldsFromDayReport
         Call RemoveFieldsFromHouseReport
-        
+        Call RemoveFieldsFromStaffReport
+
         MsgBox "All hidden fields removed from all subreports." & vbCrLf & vbCrLf & _
                "NEXT STEPS:" & vbCrLf & _
                "1. Revert RecordSource back to original (qrytblExpirations)" & vbCrLf & _
@@ -331,7 +378,7 @@ Sub ImplementCompleteOptimization()
     
     response = MsgBox("This will implement the complete Expirations report optimization:" & vbCrLf & vbCrLf & _
                       "1. Update RecordSource to vw_ExpirationsFormatted" & vbCrLf & _
-                      "2. Add ~77 hidden fields to all subreports" & vbCrLf & _
+                      "2. Add hidden fields to all four subreports (clients, day, house, staff)" & vbCrLf & _
                       "3. Takes 1-2 minutes" & vbCrLf & vbCrLf & _
                       "IMPORTANT: Backup your database first!" & vbCrLf & vbCrLf & _
                       "Continue?", vbYesNo + vbQuestion, "Implement Optimization")
@@ -345,7 +392,8 @@ Sub ImplementCompleteOptimization()
     Call FixClientsReport
     Call FixDayReport
     Call FixHouseReport
-    
+    Call FixStaffReport
+
     MsgBox "Implementation complete!" & vbCrLf & vbCrLf & _
            "NEXT STEPS:" & vbCrLf & _
            "1. Update VBA code in each subreport's Detail_Format event" & vbCrLf & _
@@ -387,7 +435,8 @@ Sub RollbackCompleteOptimization()
     Call UpdateRecordSource("rptEXPIRATIONDATESclients", originalRecordSource)
     Call UpdateRecordSource("rptEXPIRATIONDATESday", originalRecordSource)
     Call UpdateRecordSource("rptEXPIRATIONDATEShouse", originalRecordSource)
-    
+    Call UpdateRecordSource("rptEXPIRATIONDATESstaff", originalRecordSource)
+
     MsgBox "Rollback complete!" & vbCrLf & vbCrLf & _
            "MANUAL STEPS REQUIRED:" & vbCrLf & _
            "1. Restore original VBA code in Detail_Format events" & vbCrLf & _
@@ -430,10 +479,11 @@ Sub ListHiddenFieldsInReport(reportName As String)
 End Sub
 
 Sub ListAllHiddenFields()
-    ' Lists hidden fields in all three subreports
+    ' Lists hidden fields in all four subreports
     Call ListHiddenFieldsInReport("rptEXPIRATIONDATESclients")
     Call ListHiddenFieldsInReport("rptEXPIRATIONDATESday")
     Call ListHiddenFieldsInReport("rptEXPIRATIONDATEShouse")
+    Call ListHiddenFieldsInReport("rptEXPIRATIONDATESstaff")
 End Sub
 
 Sub ListAllControlsInReport(reportName As String)

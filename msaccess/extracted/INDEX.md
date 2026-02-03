@@ -79,7 +79,7 @@ All forms, reports, and modules with complete source code.
 
 ### Expirations System
 **VBA Module:**
-- `vba/Expirations.vba` - Expiration management code
+- `vba/Expirations_Updated.vba` (Expirations module) - Expiration management code
 
 **Queries (27):**
 - `queries/qryEXPIRATIONS00.sql` through `queries/qryEXPIRATIONS26.sql`

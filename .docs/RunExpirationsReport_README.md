@@ -23,7 +23,7 @@ SELECT @Result AS ReturnCode
 
 ### VBA Function
 ```vba
-' File: msaccess/extracted/vba/Expirations.vba
+' Module: Expirations (see msaccess/extracted/vba/Expirations_Updated.vba for reference)
 ' Function: RunExpirationsReport()
 ' Status: ✅ DEPLOYED - Calls stored procedure
 
@@ -56,7 +56,7 @@ Migrated the `RunExpirationsReport()` VBA function from **26+ inline SQL queries
 | File | Description | Status |
 |------|-------------|--------|
 | `spApp_RunExpirationReport.sql` | SQL Server stored procedure | ✅ Working |
-| `Expirations.vba` | VBA code with stored procedure integration | ✅ **DEPLOYED** |
+| `Expirations_Updated.vba` | VBA reference (RunExpirationsReport in Expirations module) | ✅ **DEPLOYED** |
 | `RunExpirationsReport_MIGRATION_GUIDE.md` | Detailed migration guide | 📖 Complete |
 | `RunExpirationsReport_CHANGES.md` | Detailed changes log | 📝 Complete |
 
@@ -77,7 +77,7 @@ SELECT * FROM sys.procedures WHERE name = 'spApp_RunExpirationReport'
 
 ### 2. VBA Code Status
 
-✅ **DEPLOYED** - The `RunExpirationsReport()` function in `Expirations.vba` has been updated to call the stored procedure.
+✅ **DEPLOYED** - The `RunExpirationsReport()` function in the Expirations module (see `Expirations_Updated.vba` for reference) has been updated to call the stored procedure.
 
 **Connection Configuration:**
 - Server: `tillsqlserver.database.windows.net` (Azure SQL)
@@ -114,7 +114,7 @@ Check the troubleshooting section in `RunExpirationsReport_MIGRATION_GUIDE.md`
 4. **"Cannot insert NULL"** → NULL vs empty string (Fixed)
 
 ### Rollback
-If issues occur, revert to original function in `Expirations.vba`
+If issues occur, revert to original function (see `Expirations_Original.vba` for reference).
 
 ---
 
@@ -161,6 +161,6 @@ For questions or issues with this migration:
 
 ---
 
-**Last Updated:** January 30, 2026  
+**Last updated:** February 2, 2026  
 **Version:** 1.0  
 **Status:** ✅ **DEPLOYED** - Azure SQL Configuration Active

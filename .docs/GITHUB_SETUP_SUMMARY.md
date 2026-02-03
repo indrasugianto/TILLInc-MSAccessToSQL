@@ -197,6 +197,6 @@ If you have issues with the repository:
 
 ---
 
-**Setup Completed:** January 29, 2026  
+**Setup completed:** January 29, 2026 · **Last updated:** February 2, 2026  
 **Repository:** https://github.com/indrasugianto/TILLInc-MSAccessToSQL  
 **Status:** ✅ Ready to Use

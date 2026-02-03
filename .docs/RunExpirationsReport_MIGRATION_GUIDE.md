@@ -1,9 +1,9 @@
 # Stored Procedure Migration Guide
 ## RunExpirationsReport Refactoring
 
-**Date:** January 30, 2026  
+**Date:** January 30, 2026 · **Last updated:** February 2, 2026  
 **Function:** RunExpirationsReport()  
-**Module:** Expirations.vba
+**Module:** Expirations (see `msaccess/extracted/vba/Expirations_Updated.vba` for reference)
 
 ---
 
@@ -73,7 +73,7 @@ The refactored VBA code uses ADO (ActiveX Data Objects) to call the stored proce
 
 ✅ **COMPLETED** - Connection configured for Azure SQL
 
-The `GetSQLServerConnectionString()` function in `Expirations.vba` is configured as:
+The `GetSQLServerConnectionString()` function in the Expirations module is configured as:
 
 ```vba
 Private Function GetSQLServerConnectionString() As String
@@ -114,10 +114,10 @@ SELECT RecordType, COUNT(*) FROM tblExpirations GROUP BY RecordType
 
 ### 5. Deploy the Refactored VBA Code
 
-✅ **COMPLETED** - VBA code has been integrated into the main `Expirations.vba` module
+✅ **COMPLETED** - VBA code has been integrated into the Expirations module (see `Expirations_Updated.vba`)
 
 **What was done:**
-1. ✅ The `RunExpirationsReport()` function in `Expirations.vba` was updated
+1. ✅ The `RunExpirationsReport()` function in the Expirations module was updated
 2. ✅ Original inline SQL replaced with stored procedure call
 3. ✅ `GetSQLServerConnectionString()` function added
 4. ✅ Azure SQL authentication configured
@@ -490,7 +490,7 @@ Regular maintenance tasks:
 
 ### Deployment Details
 - ✅ `spApp_RunExpirationReport.sql` - Stored procedure (deployed on Azure SQL)
-- ✅ `Expirations.vba` - VBA code updated with stored procedure integration
+- ✅ Expirations module (`Expirations_Updated.vba`) - VBA code updated with stored procedure integration
 - ✅ Azure SQL connection configured and tested
 - ✅ `RunExpirationsReport_MIGRATION_GUIDE.md` - This guide
 - ✅ `RunExpirationsReport_CHANGES.md` - Detailed changes log

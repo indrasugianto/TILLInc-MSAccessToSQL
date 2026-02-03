@@ -1,6 +1,6 @@
 # RunExpirationsReport Migration - Changes Summary
 
-**Date:** January 30, 2026  
+**Date:** January 30, 2026 · **Last updated:** February 2, 2026  
 **Status:** ✅ **DEPLOYED TO PRODUCTION**  
 **Version:** 1.0
 
@@ -14,7 +14,7 @@ Successfully migrated the `RunExpirationsReport()` VBA function from inline SQL 
 
 ### Created/Updated
 - `msaccess/extracted/sql/spApp_RunExpirationReport.sql` - SQL Server stored procedure (deployed to Azure SQL)
-- `msaccess/extracted/vba/Expirations.vba` - **UPDATED** with stored procedure integration
+- `msaccess/extracted/vba/Expirations_Updated.vba` - **UPDATED** with stored procedure integration (Expirations module)
 - `.docs/RunExpirationsReport_MIGRATION_GUIDE.md` - Comprehensive migration guide
 - `.docs/RunExpirationsReport_CHANGES.md` - This file
 - `.docs/RunExpirationsReport_README.md` - Quick reference guide
@@ -206,7 +206,7 @@ Password = "[configured]"
 - ✅ tblExpirations populated correctly
 - ✅ Azure SQL authentication working
 - ✅ PDF report generates correctly
-- ✅ Integration complete in main Expirations.vba module
+- ✅ Integration complete in Expirations module (Expirations_Updated.vba)
 
 ---
 
@@ -224,7 +224,7 @@ If issues are discovered in production:
 5. **Redeploy:** After testing, switch back to stored procedure
 
 **Files preserved for rollback:**
-- `msaccess/extracted/vba/Expirations.vba` (original function)
+- `msaccess/extracted/vba/Expirations_Original.vba` (original function reference)
 
 ---
 
@@ -319,7 +319,7 @@ WHERE object_name(object_id) = 'spApp_RunExpirationReport'
 
 ## References
 
-- Original VBA: `msaccess/extracted/vba/Expirations.vba`
+- Original VBA: `msaccess/extracted/vba/Expirations_Original.vba`
 - Refactored VBA: `msaccess/extracted/vba/Expirations_Refactored.vba`
 - Stored Procedure: `msaccess/extracted/sql/spApp_RunExpirationReport.sql`
 - Migration Guide: `.docs/RunExpirationsReport_MIGRATION_GUIDE.md`
@@ -335,7 +335,7 @@ WHERE object_name(object_id) = 'spApp_RunExpirationReport'
 - Stored Procedure: spApp_RunExpirationReport
 
 **VBA Module:**
-- File: msaccess/extracted/vba/Expirations.vba
+- File: msaccess/extracted/vba/Expirations_Updated.vba
 - Function: RunExpirationsReport()
 - Connection: GetSQLServerConnectionString()
 

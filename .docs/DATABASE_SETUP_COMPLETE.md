@@ -94,15 +94,15 @@ Installed packages:
 3. ✅ Updated `.gitignore` to exclude `.env` files
 4. ✅ Credentials never committed to git
 
-**Your `.env` file contains:**
+**Configure `.env`** (copy from `.env.example`):
 ```env
 AZURE_SQL_SERVER=tillsqlserver.database.windows.net
 AZURE_SQL_DATABASE=TILLDBWEB_Prod
-AZURE_SQL_USER=tillsqladmin
-AZURE_SQL_PASSWORD=Purpl3R31gn
+AZURE_SQL_USER=your_username
+AZURE_SQL_PASSWORD=your_password
 ```
 
-⚠️ **Important:** The `.env` file stays on your local machine and is NOT in the GitHub repository.
+⚠️ **Important:** The `.env` file is in `.gitignore` and is NOT committed. Never commit real credentials.
 
 ---
 
@@ -323,6 +323,7 @@ With both Access and SQL documented:
 
 ---
 
-**Setup Completed:** January 29, 2026  
+**Setup completed:** January 29, 2026  
+**Last updated:** February 2, 2026  
 **Database:** TILLDBWEB_Prod @ tillsqlserver.database.windows.net  
 **Status:** ✅ Ready for Development and Migration Planning

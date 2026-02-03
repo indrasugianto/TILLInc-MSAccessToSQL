@@ -12,10 +12,10 @@ This repository contains the extracted content and migration tools for the TILL 
 
 - **Server:** tillsqlserver.database.windows.net
 - **Database:** TILLDBWEB_Prod
-- **User:** tillsqladmin
 - **Type:** Azure SQL Database (Microsoft SQL Azure)
 - **Tables:** 284 tables with ~236,000 total rows
-- **Size:** ~2.6 GB
+- **Size:** ~2.6 GB  
+- **Credentials:** Configure in `.env` (see `.env.example`); never commit real credentials.
 
 ## 📂 Repository Structure
 
@@ -31,9 +31,10 @@ TILLInc-MSAccessToSQL/
 │       ├── vba/                            (144 VBA modules)
 │       └── reports/                        (Documentation)
 ├── .docs/                                  (Project documentation)
-│   ├── DATABASE_SETUP_COMPLETE.md          (Database setup summary)
-│   ├── DATABASE_TOOLS_README.md            (Database tools guide)
-│   └── GITHUB_SETUP_SUMMARY.md             (GitHub setup info)
+│   ├── README.md                            (Index — start here)
+│   ├── DATABASE_TOOLS_README.md             (Database tools)
+│   ├── EXPIRATION_REPORT_OPTIMIZATION_README.md  (Expiration report)
+│   └── RunExpirationsReport_README.md       (Stored procedure)
 ├── assessment_reports/                     (Database assessment reports)
 ├── db_connection.py                        (Azure SQL connection utility)
 ├── assess_database.py                      (Database assessment tool)
@@ -96,7 +97,7 @@ The assessment generates a detailed report analyzing:
 - Triggers and database objects
 - Comparison with Access extraction
 
-**See:** [DATABASE_TOOLS_README.md](.docs/DATABASE_TOOLS_README.md) for complete documentation.
+**See:** [.docs/README.md](.docs/README.md) for all documentation, or [.docs/DATABASE_TOOLS_README.md](.docs/DATABASE_TOOLS_README.md) for tools only.
 
 ### 3. Run Extraction Scripts (if needed)
 
@@ -117,9 +118,10 @@ cscript extract_vba.vbs
 
 ## 📖 Documentation
 
-- **[Quick Start](msaccess/extracted/README.md)** - Get started with extracted content
-- **[Quick Reference](msaccess/extracted/INDEX.md)** - Find files by functionality
-- **[Complete Analysis](msaccess/extracted/reports/COMPLETE_EXTRACTION_SUMMARY.md)** - Full extraction report with recommendations
+- **[.docs/README.md](.docs/README.md)** - Index of all project docs (expiration optimization, RunExpirationsReport, database tools)
+- **[msaccess/extracted/README.md](msaccess/extracted/README.md)** - Extracted content quick start
+- **[msaccess/extracted/INDEX.md](msaccess/extracted/INDEX.md)** - Find files by functionality
+- **[COMPLETE_EXTRACTION_SUMMARY](msaccess/extracted/reports/COMPLETE_EXTRACTION_SUMMARY.md)** - Full extraction report
 
 ## 🔍 Key Findings
 
@@ -205,4 +207,4 @@ Internal TILL Inc. project - All rights reserved
 
 ---
 
-**Last Updated:** January 29, 2026
+**Last updated:** February 2, 2026

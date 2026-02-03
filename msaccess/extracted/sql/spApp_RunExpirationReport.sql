@@ -35,10 +35,11 @@ BEGIN
         BEGIN TRANSACTION;
         
         -- ========================================
-        -- STEP 1: Validation Check
+        -- STEP 1: Validation Check (matches VBA DontRunExpirations)
         -- ========================================
-        -- Check if staff and staff skills tables have data
-        IF NOT EXISTS (SELECT 1 FROM tblStaff WHERE INACTIVE = 0)
+        -- VBA: DCount("Inactive", "tblStaff") = 0 Or DCount("EMPID_I", "tblStaffSkills") = 0
+        -- Equivalent: no rows in tblStaff OR no rows in tblStaffSkills
+        IF NOT EXISTS (SELECT 1 FROM tblStaff)
            OR NOT EXISTS (SELECT 1 FROM tblStaffSkills)
         BEGIN
             ROLLBACK TRANSACTION;
@@ -271,7 +272,7 @@ BEGIN
             loc.FSOTrainsIndividualsBefore
         FROM tblLocations loc
         WHERE loc.GPName IS NOT NULL
-            AND EXISTS (SELECT 1 FROM #temptbl t WHERE t.GPName = loc.GPName)
+            AND (SELECT TOP 1 t.GPSuperCode FROM #temptbl t WHERE t.GPName = loc.GPName) IS NOT NULL
             AND loc.Department <> 'Clinical and Support Services'
         ORDER BY loc.GPName;
         
@@ -357,13 +358,15 @@ BEGIN
             AND t0.FirstName IS NOT NULL;
         
         -- ========================================
-        -- STEP 10: Populate Staff Information
+        -- STEP 10: Populate Staff Information (one row per staff, not per skill)
         -- ========================================
+        -- VBA uses tempstaff INNER JOIN tempstaffskills but Access may deduplicate or
+        -- have fewer rows; SP must insert one row per staff to match report row count.
         INSERT INTO tblExpirations (
             Location, RecordType, LastName, FirstName, JobTitle, 
             Supervisor, AdjustedStartDate
         )
-        SELECT 
+        SELECT DISTINCT
             ts.DEPRTMNT AS Location,
             'Staff' AS RecordType,
             ts.LASTNAME,
@@ -375,8 +378,7 @@ BEGIN
         INNER JOIN #tempstaffskills tss ON ts.EMPLOYID = tss.EMPID_I
         WHERE ts.DEPRTMNT IS NOT NULL
             AND ts.LASTNAME IS NOT NULL
-            AND ts.FRSTNAME IS NOT NULL
-        ORDER BY ts.LASTNAME, ts.FRSTNAME;
+            AND ts.FRSTNAME IS NOT NULL;
         
         -- ========================================
         -- STEP 11: Update Staff Skills Information
@@ -534,7 +536,7 @@ BEGIN
             te.OnLeave
         FROM tblLocations loc
         INNER JOIN tblPeople p ON loc.StaffPrimaryContactIndexedName = p.IndexedName
-        INNER JOIN tblExpirations te ON p.FirstName = te.FirstName AND p.LastName = te.LastName
+        INNER JOIN tblExpirations te ON p.FirstName = te.FirstName AND p.LastName = te.LastName AND te.RecordType = 'Staff'
         WHERE loc.GPName IS NOT NULL
             AND p.GPSuperCode IS NOT NULL
             AND loc.Department IN ('Residential Services', 'Day Services', 'Vocational Services', 'TILL NH', 'Expirations Reporting')
@@ -592,7 +594,7 @@ BEGIN
             te.OnLeave
         FROM tblLocations loc
         INNER JOIN tblPeople p ON loc.StaffPrimaryContactIndexedName = p.IndexedName
-        INNER JOIN tblExpirations te ON p.FirstName = te.FirstName AND p.LastName = te.LastName
+        INNER JOIN tblExpirations te ON p.FirstName = te.FirstName AND p.LastName = te.LastName AND te.RecordType = 'Staff'
         WHERE loc.GPName IS NOT NULL
             AND p.GPSuperCode IS NOT NULL
             AND loc.CityTown <> 'Dedham'

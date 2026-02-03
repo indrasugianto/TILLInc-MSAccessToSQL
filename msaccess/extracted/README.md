@@ -12,7 +12,7 @@ This folder contains all extracted content from the TILL MS Access database.
 ## 📖 Documentation
 
 **Start here for navigation:**
-- **[INDEX.md](reports/INDEX.md)** - Quick reference guide organized by functionality
+- **[INDEX.md](INDEX.md)** - Quick reference guide organized by functionality
 - **[COMPLETE_EXTRACTION_SUMMARY.md](reports/COMPLETE_EXTRACTION_SUMMARY.md)** - Comprehensive analysis and recommendations
 
 ## 📊 Extraction Summary

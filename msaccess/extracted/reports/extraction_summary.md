@@ -1,17 +1,17 @@
-# MS Access Database Extraction Report
+# MS Access Database Extraction Report (Initial Run)
 
-**Database:** `c:\GitHub\TILLInc-MSAccessToSQL\msaccess\TILLDB_V9.14_20260128 - WEB.accdb`  
+**Database:** `TILLDB_V9.14_20260128 - WEB.accdb`  
 **Extraction Date:** 2026-01-29 16:09:06
 
-## Connection Information
-- **Server:** tillsqlserver.database.windows.net
-- **User:** tillsqladmin
-- **Database Type:** Azure SQL Database
+> **Note:** This report is from the *initial* extraction (tables and queries only). For the full extraction including 144 VBA modules, see [COMPLETE_EXTRACTION_SUMMARY.md](COMPLETE_EXTRACTION_SUMMARY.md).
+
+## Connection
+- **Backend:** Azure SQL (tillsqlserver.database.windows.net). Configure credentials in project `.env`; see root `.env.example`.
 
 ## Summary
 - **Total Tables Extracted:** 47
 - **Total Queries Extracted:** 166
-- **VBA Modules:** Not extracted (requires MS Access application)
+- **VBA Modules:** Not extracted in this run (requires MS Access application; see COMPLETE_EXTRACTION_SUMMARY for full extraction)
 
 ## Tables Extracted
 

@@ -1,7 +1,7 @@
 # RunExpirationsReport - Deployment Summary
 
 **Status:** ✅ **DEPLOYED AND ACTIVE**  
-**Date:** January 30, 2026  
+**Date:** January 30, 2026 · **Last updated:** February 2, 2026  
 **Version:** 1.0
 
 ---
@@ -16,7 +16,7 @@
 - **Status:** ✅ Active and working
 
 ### VBA Code
-- **File:** `msaccess/extracted/vba/Expirations.vba`
+- **File:** `msaccess/extracted/vba/Expirations_Updated.vba` (Expirations module)
 - **Function:** `RunExpirationsReport()`
 - **Changes:** 
   - Replaced 26+ inline SQL queries with single stored procedure call
@@ -133,7 +133,7 @@ msaccess/
       ├─ sql/
       │   └─ spApp_RunExpirationReport.sql  ← Stored procedure (deployed)
       └─ vba/
-          └─ Expirations.vba                ← Updated with SP integration
+          └─ Expirations_Updated.vba        ← Updated with SP integration (Expirations module)
 
 .docs/
   ├─ RunExpirationsReport_README.md         ← Quick reference
@@ -215,13 +215,7 @@ The original inline SQL version was replaced. To rollback, you would need to res
 ## Security Notes
 
 ### Credentials in Code
-⚠️ **Warning:** Database credentials are currently stored in VBA code.
-
-**Current Implementation:**
-```vba
-UserName = "tillsqladmin"
-Password = "Purpl3R31gn"  ' Hardcoded in GetSQLServerConnectionString()
-```
+⚠️ **Warning:** Database credentials may be stored in VBA code. Do not commit real passwords.
 
 **Recommendations for Production:**
 1. Store credentials in encrypted configuration table
@@ -289,7 +283,6 @@ The `RunExpirationsReport()` function has been successfully migrated from inline
 
 ---
 
-**Last Updated:** January 30, 2026  
-**Deployed By:** AI Assistant with User  
+**Last updated:** February 2, 2026  
 **Version:** 1.0  
 **Environment:** Azure SQL (tillsqlserver.database.windows.net)

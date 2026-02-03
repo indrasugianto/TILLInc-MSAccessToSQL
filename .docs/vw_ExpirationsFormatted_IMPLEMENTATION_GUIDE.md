@@ -1,6 +1,6 @@
 # Expiration Report - Performance Optimization Implementation Guide
 
-**Date:** January 30, 2026  
+**Date:** January 30, 2026 · **Last updated:** February 2, 2026  
 **Purpose:** Implement SQL-based pre-calculation to eliminate VBA performance bottlenecks  
 **VBA Module:** `ModReportFieldManager.vba` - Automates field addition
 
@@ -15,8 +15,12 @@ This guide walks you through implementing the pre-calculated view `vw_Expiration
 **Key Changes:**
 - Move ALL date calculations from VBA to SQL Server
 - Move ALL name formatting from VBA to SQL Server
-- Simplify VBA to just read pre-calculated values and apply formatting
+- Simplify VBA to read pre-calculated values and apply formatting only (do **not** set `.Value` on bound controls)
 - Reduce network calls from thousands to dozens
+
+**Subreports:** Clients, Day, House (this guide); Staff (see `rptEXPIRATIONDATESstaff_VBA_UPDATED.md`).
+
+**Verification:** After implementation, see `vw_ExpirationsFormatted_REASSESSMENT.md` for the view-vs-VBA checklist and NULL-handling notes.
 
 **Expected Result:** 10x - 40x performance improvement (5-20 minutes → 30 seconds - 2 minutes)
 
@@ -102,8 +106,7 @@ You should see:
 
 This automatically:
 - ✅ Updates RecordSource to `vw_ExpirationsFormatted`
-- ✅ Adds all required hidden fields (~77 total)
-- ✅ Updates all 3 subreports
+- ✅ Adds all required hidden fields to all four subreports (clients, day, house, staff)
 
 **Note:** The VBA module sets `ControlSource = fieldName` (not `="fieldName"`) - this is correct for programmatic assignment.
 
@@ -189,10 +192,9 @@ On Error GoTo 0
     ' DateISP - Simple binding to pre-calculated view
     ' ========================================
     If DateISP_ShowDate = 1 Then
-        ' Show the date field
+        ' Show the date field (bound control - do NOT set .Value)
         NextISPTxt.Visible = False
         DateISPFmt.Visible = True
-        DateISPFmt.Value = DateISP_Display
         Call ApplyColorFormatting(DateISPFmt, DateISP_Color)
     Else
         ' Show the text label (Missing/Optional/N/A)
@@ -214,7 +216,6 @@ On Error GoTo 0
     Else
         PSDueTxt.Visible = False
         PSDueFmt.Visible = True
-        PSDueFmt.Value = PSDue_Display
         Call ApplyColorFormatting(PSDueFmt, PSDue_Color)
         PSStrikeThru.Visible = (PSDue_Color = "STRIKETHROUGH")
     End If
@@ -270,9 +271,9 @@ End Sub
 Private Sub FormatExpirationField(showDate As Integer, displayValue As String, _
                                   colorCode As String, txtLabel As Control, fmtDate As Control)
     If showDate = 1 Then
+        ' Show date: fmtDate is bound (ControlSource = field), so do NOT set .Value
         txtLabel.Visible = False
         fmtDate.Visible = True
-        fmtDate.Value = displayValue
         Call ApplyColorFormatting(fmtDate, colorCode)
     Else
         txtLabel.Visible = True

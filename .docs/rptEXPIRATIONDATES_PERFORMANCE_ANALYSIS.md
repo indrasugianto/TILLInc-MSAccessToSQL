@@ -1,7 +1,7 @@
 # Expiration Dates Report - Performance Analysis
 
 **Report:** `rptEXPIRATIONDATES` with subreports  
-**Date:** January 30, 2026  
+**Date:** January 30, 2026 · **Last updated:** February 2, 2026  
 **Issue:** Report takes excessively long to run when connected to Azure SQL  
 
 ---
@@ -15,7 +15,7 @@ The report is slow because **MS Access is performing thousands of calculations i
 - Client-side processing instead of server-side
 - No optimization or caching
 
-**Impact:** A report with 100 records and 3 subreports could trigger **thousands of VBA operations and network calls**.
+**Impact:** A report with 100 records and four subreports could trigger **thousands of VBA operations and network calls**.
 
 ---
 
@@ -23,7 +23,7 @@ The report is slow because **MS Access is performing thousands of calculations i
 
 ### 1. **Detail_Format Event Processing (CRITICAL)**
 
-All three subreports execute extensive VBA code in their `Detail_Format` event:
+All four subreports (clients, day, house, staff) execute extensive VBA code in their `Detail_Format` event:
 
 #### `rptEXPIRATIONDATESclients.vba` (121 lines)
 - **6 date fields** with complex calculations per record
