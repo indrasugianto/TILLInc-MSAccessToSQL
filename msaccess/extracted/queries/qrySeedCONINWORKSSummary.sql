@@ -1,5 +1,5 @@
 -- Query Name: qrySeedCONINWORKSSummary
--- Extracted: 2026-01-29 16:09:05
+-- Extracted: 2026-02-04 13:04:22
 
 INSERT INTO [~CONINWORKSSummary] ( FY, ContractID, DDSMaxObligation, ContractUnit, NumLocations, NumClients, Units, BillingRate, FundingSource, AccountingStaff )
 SELECT qryCurrentFYContracts.FY, qryCurrentFYContracts.ContractID, qryCurrentFYContracts.MaximumObligationAsAmended, qryCurrentFYContracts.Units, DCount("ContractID","qryCONINWORKS","ContractID=""" & [qryCurrentFYContracts].[ContractID] & """") AS NumLocations, qryCurrentFYContracts.TotalClients, qryCurrentFYContracts.TotalUnitsAsAmended, DLookUp("BillingRate","tblContractsBillingBook","FY=" & [Forms]![frmMainMenu]![SelectFY] & " AND ContractID=""" & [qryCurrentFYContracts].[ContractID] & """") AS BillingRate, DLookUp("FundingSource","qryCONINWORKS","ContractID=""" & [qryCurrentFYContracts].[ContractID] & """") AS FundingSource, qryCurrentFYContracts.AccountingStaff

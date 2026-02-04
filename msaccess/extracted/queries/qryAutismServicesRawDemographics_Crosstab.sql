@@ -1,5 +1,5 @@
 -- Query Name: qryAutismServicesRawDemographics_Crosstab
--- Extracted: 2026-01-29 16:09:05
+-- Extracted: 2026-02-04 13:04:21
 
 TRANSFORM Count(temptbl1.Counter) AS CountOfCounter
 SELECT temptbl1.Age, temptbl1.Gender, Count(temptbl1.Counter) AS [Total Of Counter]

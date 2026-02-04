@@ -1,5 +1,5 @@
 -- Query Name: qryUpdateSpringboardLeaders05
--- Extracted: 2026-01-29 16:09:05
+-- Extracted: 2026-02-04 13:04:22
 
 INSERT INTO temptbl ( IndexedName, SprGroup, LastName, FirstName )
 SELECT tblPeopleConsultants.IndexedName, tblPeopleConsultants.SpringboardGroupCode3 AS SprGroup, tblPeople.LastName, tblPeople.FirstName

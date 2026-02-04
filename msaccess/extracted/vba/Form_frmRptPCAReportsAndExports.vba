@@ -1,17 +1,17 @@
-' Module Name: Form_frmRptPCAReportsAndExports
+﻿' Module Name: Form_frmRptPCAReportsAndExports
 ' Module Type: Document Module
 ' Lines of Code: 122
-' Extracted: 1/29/2026 4:12:27 PM
+' Extracted: 2026-02-04 13:03:36
 
 Option Compare Database
 Option Explicit
 
-Private Function BasicExport(QueryString As String, ReportName As String) As Boolean
+Private Function BasicExport(QueryString As String, reportName As String) As Boolean
 On Error GoTo ShowMeError
     BasicExport = True
     Call DropTempTables
     TILLDataBase.Execute QueryString, dbSeeChanges: Call BriefDelay
-    Call ParseFamilyMembersAndThenExport(9, "temptbl", ReportName)
+    Call ParseFamilyMembersAndThenExport(9, "temptbl", reportName)
     SysCmdResult = SysCmd(5)
     Exit Function
 ShowMeError:

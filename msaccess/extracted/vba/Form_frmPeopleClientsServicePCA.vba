@@ -1,7 +1,7 @@
-' Module Name: Form_frmPeopleClientsServicePCA
+﻿' Module Name: Form_frmPeopleClientsServicePCA
 ' Module Type: Document Module
 ' Lines of Code: 99
-' Extracted: 1/29/2026 4:12:24 PM
+' Extracted: 2026-02-04 13:03:35
 
 Option Compare Database
 Option Explicit
@@ -101,3 +101,4 @@ End Sub
 Private Sub SelectBroker_Click()
     DoCmd.OpenForm "frmPeopleSelectPerson", , , , , , "PCASkillsTrainer"
 End Sub
+

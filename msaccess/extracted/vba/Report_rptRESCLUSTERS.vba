@@ -1,7 +1,7 @@
-' Module Name: Report_rptRESCLUSTERS
+﻿' Module Name: Report_rptRESCLUSTERS
 ' Module Type: Document Module
 ' Lines of Code: 23
-' Extracted: 1/29/2026 4:12:25 PM
+' Extracted: 2026-02-04 13:03:35
 
 Option Compare Database
 Option Explicit

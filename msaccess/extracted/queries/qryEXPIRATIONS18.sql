@@ -1,5 +1,5 @@
 -- Query Name: qryEXPIRATIONS18
--- Extracted: 2026-01-29 16:09:05
+-- Extracted: 2026-02-04 13:04:22
 
 INSERT INTO tblExpirations ( Location, RecordType, LastName, FirstName, JobTitle, Supervisor, AdjustedStartDate )
 SELECT [tempstaff]![DEPRTMNT] AS Location, "Staff" AS RecordType, tempstaff.LASTNAME, tempstaff.FRSTNAME, tempstaff.JOBTITLE, tempstaff.SUPERVISORCODE_I, tempstaff.BENADJDATE AS AdjustedStartDate

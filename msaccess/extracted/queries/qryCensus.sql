@@ -1,5 +1,5 @@
 -- Query Name: qryCensus
--- Extracted: 2026-01-29 16:09:06 (ADO Method)
+-- Extracted: 2026-02-04 13:04:22 (ADO Method)
 
 SELECT tblLocations.CityTown, tblLocations.LocationName, tblLocations.Address, tblLocations.City, tblLocations.State, tblLocations.ZIP, tblLocations.County, tblLocations.NumClients
 FROM tblLocations

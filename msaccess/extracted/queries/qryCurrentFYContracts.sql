@@ -1,5 +1,5 @@
 -- Query Name: qryCurrentFYContracts
--- Extracted: 2026-01-29 16:09:05
+-- Extracted: 2026-02-04 13:04:21
 
 SELECT tblContracts.*
 FROM tblContracts

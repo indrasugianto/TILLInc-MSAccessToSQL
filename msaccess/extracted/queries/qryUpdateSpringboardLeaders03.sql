@@ -1,5 +1,5 @@
 -- Query Name: qryUpdateSpringboardLeaders03
--- Extracted: 2026-01-29 16:09:05
+-- Extracted: 2026-02-04 13:04:22
 
 SELECT tblPeopleConsultants.IndexedName, tblPeopleConsultants.SpringboardGroupCode1 AS SprGroup, tblPeople.LastName, tblPeople.FirstName INTO temptbl
 FROM tblPeopleConsultants INNER JOIN tblPeople ON tblPeopleConsultants.IndexedName = tblPeople.IndexedName

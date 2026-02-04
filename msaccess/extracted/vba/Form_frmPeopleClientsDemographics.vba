@@ -1,7 +1,7 @@
-' Module Name: Form_frmPeopleClientsDemographics
+﻿' Module Name: Form_frmPeopleClientsDemographics
 ' Module Type: Document Module
 ' Lines of Code: 1520
-' Extracted: 1/29/2026 4:12:26 PM
+' Extracted: 2026-02-04 13:03:35
 
 Option Compare Database
 Option Explicit
@@ -1522,3 +1522,4 @@ Private Function PCA_Autism_Or_CommunityConnections_Springboard_TRASE()
         End If
     End If
 End Function
+

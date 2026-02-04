@@ -1,7 +1,7 @@
-' Module Name: Form_frmPeopleClientsServiceIndividualSupport
+﻿' Module Name: Form_frmPeopleClientsServiceIndividualSupport
 ' Module Type: Document Module
 ' Lines of Code: 54
-' Extracted: 1/29/2026 4:12:26 PM
+' Extracted: 2026-02-04 13:03:35
 
 Option Compare Database
 Option Explicit
@@ -56,3 +56,4 @@ End Sub
 Private Sub EndDate_AfterUpdate()
     If ValidateDateString(EndDate) Then Call UpdateChangeLog("ISSDateDate", EndDate)
 End Sub
+

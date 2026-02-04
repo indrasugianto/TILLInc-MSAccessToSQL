@@ -1,5 +1,5 @@
 -- Query Name: qryEXPIRATIONS19
--- Extracted: 2026-01-29 16:09:05
+-- Extracted: 2026-02-04 13:04:22
 
 SELECT tempstaffskills.EMPID_I, tempstaffskills.SKILLNUMBER_I, tempstaffskills.EXPIREDSKILL_I INTO temptbl1
 FROM tempstaffskills INNER JOIN tblStaff ON tempstaffskills.EMPID_I = tblStaff.EMPLOYID

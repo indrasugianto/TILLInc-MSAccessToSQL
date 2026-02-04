@@ -1,3 +1,8 @@
+﻿' Module Name: Expirations
+' Module Type: Standard Module
+' Lines of Code: 830
+' Extracted: 2026-02-04 13:03:36
+
 Option Compare Database
 Option Explicit
 
@@ -61,20 +66,20 @@ On Error GoTo ShowMeError
     ' =============================================
     Call AppendProgressMessages("Executing stored procedure to generate expiration data...")
     Call AppendProgressMessages("This may take several minutes. Please wait...")
-    
+
     Set cmd = New ADODB.Command
     With cmd
         .ActiveConnection = conn
         .CommandType = adCmdStoredProc
         .CommandText = "spApp_RunExpirationReport"
         .CommandTimeout = 0 ' No timeout
-        
+
         ' Add return value parameter
         .Parameters.Append .CreateParameter("ReturnValue", adInteger, adParamReturnValue)
-        
+
         ' Execute the stored procedure
         Set rs = .Execute
-        
+
         ' Get the return value
         ReturnValue = .Parameters("ReturnValue").Value
     End With

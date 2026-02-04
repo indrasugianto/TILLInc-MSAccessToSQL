@@ -1,7 +1,7 @@
-' Module Name: PublicSubroutines
+﻿' Module Name: PublicSubroutines
 ' Module Type: Standard Module
 ' Lines of Code: 704
-' Extracted: 1/29/2026 4:12:25 PM
+' Extracted: 2026-02-04 13:03:35
 
 Option Compare Database
 Option Explicit
@@ -23,8 +23,8 @@ On Error GoTo ShowMeError
     TILLDataBase.Execute "DELETE * FROM AllClients", dbSeeChanges: Call BriefDelay
     Call BriefDelay
     SysCmdResult = SysCmd(4, "Building AllClients table. ")
-    TILLDataBase.Execute "INSERT INTO AllClients ( DisplayName, ReverseDisplayName, IndexedName, LastName, FirstName, MiddleInitial, IsClientDay, IsClientRes, IsClientTrans, IsClientVocat, IsClientSharedLiving, IsClientAFC, IsCilentCLO, IsClientIndiv, IsClientAutism, IsClientPCA, IsClientIHBC, IsClientSpring, IsClientTRASE, IsClientSTRATTUS, IsClientCommunityConnections) " & _
-        "SELECT [tblPeople]![FirstName] & ' ' & [tblPeople]![MiddleInitial] & ' ' & [tblPeople]![LastName] AS DisplayName, [tblPeople].[LastName] & ', ' & [tblPeople].[Firstname] AS ReverseDisplayName, tblPeople.IndexedName, tblPeople.LastName, tblPeople.FirstName, tblPeople.MiddleInitial, tblPeople.IsClientDay, tblPeople.IsClientRes, tblPeople.IsClientTrans, tblPeople.IsClientVocat, tblPeople.IsClientSharedLiving, tblPeople.IsClientAFC, tblPeople.IsCilentCLO, tblPeople.IsClientIndiv, tblPeople.IsClientAutism, tblPeople.IsClientPCA, tblPeople.IsClientIHBC, tblPeople.IsClientSpring, tblPeople.IsClientTRASE, tblPeople.IsClientSTRATTUS, tblPeople.IsClientCommunityConnections FROM tblPeople " & _
+    TILLDataBase.Execute "INSERT INTO AllClients ( DisplayName, ReverseDisplayName, IndexedName, LastName, FirstName, MiddleInitial, IsClientDay, IsClientRes, IsClientTrans, IsClientVocat, IsCilentCLO, IsClientIndiv, IsClientAutism, IsClientPCA, IsClientIHBC, IsClientSpring, IsClientTRASE, IsClientSTRATTUS, IsClientCommunityConnections) " & _
+        "SELECT [tblPeople]![FirstName] & ' ' & [tblPeople]![MiddleInitial] & ' ' & [tblPeople]![LastName] AS DisplayName, [tblPeople].[LastName] & ', ' & [tblPeople].[Firstname] AS ReverseDisplayName, tblPeople.IndexedName, tblPeople.LastName, tblPeople.FirstName, tblPeople.MiddleInitial, tblPeople.IsClientDay, tblPeople.IsClientRes, tblPeople.IsClientTrans, tblPeople.IsClientVocat, tblPeople.IsCilentCLO, tblPeople.IsClientIndiv, tblPeople.IsClientAutism, tblPeople.IsClientPCA, tblPeople.IsClientIHBC, tblPeople.IsClientSpring, tblPeople.IsClientTRASE, tblPeople.IsClientSTRATTUS, tblPeople.IsClientCommunityConnections FROM tblPeople " & _
         "WHERE tblPeople.ClientCompletelyInactive=False AND tblPeople.IsDeceased=False AND tblPeople.IsClient=True " & _
         "ORDER BY [tblPeople].[LastName] & ', ' & [tblPeople].[Firstname];", dbSeeChanges: Call BriefDelay
     Call BriefDelay
@@ -56,12 +56,12 @@ ShowMeError:
     MsgBox TILLDBErrorMessage, vbOKOnly, "Error", Err.HelpFile, Err.HelpContext
 End Function
 
-Public Function BasicExport(QueryString As String, ReportName As String) As Boolean
+Public Function BasicExport(QueryString As String, reportName As String) As Boolean
 On Error GoTo ShowMeError
     BasicExport = True
     Call DropTempTables
     TILLDataBase.Execute QueryString, dbSeeChanges: Call BriefDelay
-    Call ParseFamilyMembersAndThenExport(9, "temptbl", ReportName)
+    Call ParseFamilyMembersAndThenExport(9, "temptbl", reportName)
     SysCmdResult = SysCmd(5)
     Exit Function
 ShowMeError:
@@ -161,11 +161,11 @@ ShowMeError:
     MsgBox TILLDBErrorMessage, vbOKOnly, "Error", Err.HelpFile, Err.HelpContext
 End Sub
 
-Public Function ExecReport(ReportName As String) As Boolean
+Public Function ExecReport(reportName As String) As Boolean
     ExecReport = True
-    SysCmdResult = SysCmd(4, "Preparing report " & ReportName & ".")
-    DoCmd.OpenReport ReportName, acViewPreview
-    Call LoopUntilClosed(ReportName, 3)
+    SysCmdResult = SysCmd(4, "Preparing report " & reportName & ".")
+    DoCmd.OpenReport reportName, acViewPreview
+    Call LoopUntilClosed(reportName, 3)
     Call DropTempTables
     SysCmdResult = SysCmd(5)
 End Function
@@ -306,7 +306,7 @@ On Error GoTo ShowMeError
     Dim C As Object, ErrCode As Variant
 ' Construct mail object.
     Set C = CreateObject("CDO.message")
-    With C.Configuration.Fields
+    With C.Configuration.fields
         .Item("http://schemas.microsoft.com/cdo/configuration/smtpusessl") = True
         .Item("http://schemas.microsoft.com/cdo/configuration/smtpauthenticate") = 1
         .Item("http://schemas.microsoft.com/cdo/configuration/sendusername") = Sender
@@ -662,36 +662,36 @@ Public Function CloseForm(FormName As String, Optional NoDiagRecord As Boolean =
 End Function
 
 Public Function CloseOpenForms(Optional strExcept As String) As Boolean
-    Dim I As Integer
+    Dim i As Integer
 
     With Application.Forms
-        For I = .Count - 1 To 0 Step -1
-            With .Item(I)
+        For i = .Count - 1 To 0 Step -1
+            With .Item(i)
                 If .Name <> strExcept Then DoCmd.Close acForm, .Name
             End With
-        Next I
+        Next i
     End With
     CloseOpenForms = True
 End Function
 
 Public Function CorrectProperNames(SubmittedName As Variant) As Variant
-Dim LenSubmittedString As Variant, ResultantString As Variant, I As Long, Char As Variant, MakeUpper As Boolean
+Dim LenSubmittedString As Variant, ResultantString As Variant, i As Long, Char As Variant, MakeUpper As Boolean
     ' Initialize working values.
     LenSubmittedString = Len(SubmittedName)
     ResultantString = ""
     MakeUpper = False
-    I = 1
+    i = 1
     ' If zero-length string, get out.
     If LenSubmittedString <= 0 Then
         CorrectProperNames = ""
         Exit Function
     End If
     ' Loop through the submitted string.
-    Do While I <= LenSubmittedString
+    Do While i <= LenSubmittedString
         ' Select character to process.
-        Select Case I
+        Select Case i
             Case 1:     Char = Left(SubmittedName, 1)
-            Case Else:  Char = Mid(SubmittedName, I, 1)
+            Case Else:  Char = Mid(SubmittedName, i, 1)
         End Select
         ' A carat indicates that the next character should be forced upper case.
         If Char = "^" Then
@@ -702,7 +702,7 @@ Dim LenSubmittedString As Variant, ResultantString As Variant, I As Long, Char A
             MakeUpper = False
         End If
         ' Next character.
-        I = I + 1
+        i = i + 1
     Loop
     ' Return corrected proper name.
     CorrectProperNames = ResultantString

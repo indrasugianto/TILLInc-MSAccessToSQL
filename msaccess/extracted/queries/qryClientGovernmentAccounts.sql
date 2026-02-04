@@ -1,5 +1,5 @@
 -- Query Name: qryClientGovernmentAccounts
--- Extracted: 2026-01-29 16:09:06 (ADO Method)
+-- Extracted: 2026-02-04 13:04:22 (ADO Method)
 
 SELECT tblPeople.LastName, tblPeople.FirstName, tblPeopleClientsDemographics.DateOfBirth, tblPeople.ResLocation, tblPeopleClientsDemographics.SocialSecurityNumber, tblPeopleClientsDemographics.MedicaidNumber, tblPeopleClientsDemographics.MedicareNumber, tblPeopleClientsDemographics.FoodStampsCardNumber
 FROM (tblPeople INNER JOIN tblPeopleClientsDemographics ON tblPeople.IndexedName = tblPeopleClientsDemographics.IndexedName) LEFT JOIN tblPeopleClientsResidentialServices ON tblPeople.IndexedName = tblPeopleClientsResidentialServices.IndexedName

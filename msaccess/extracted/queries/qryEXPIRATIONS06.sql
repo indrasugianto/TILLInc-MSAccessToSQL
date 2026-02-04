@@ -1,5 +1,5 @@
 -- Query Name: qryEXPIRATIONS06
--- Extracted: 2026-01-29 16:09:05
+-- Extracted: 2026-02-04 13:04:22
 
 SELECT [CityTown] & " - " & [LocationName] AS Location, tblLocations.CityTown, tblLocations.LocationName, tblLocations.GPName, tblPeople.GPSuperCode INTO temptbl
 FROM tblLocations INNER JOIN tblPeople ON (tblLocations.CityTown = tblPeople.OfficeCityTown) AND (tblLocations.LocationName = tblPeople.OfficeLocationName)

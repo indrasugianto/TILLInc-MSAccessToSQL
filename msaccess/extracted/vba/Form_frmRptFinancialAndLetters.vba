@@ -1,13 +1,13 @@
-' Module Name: Form_frmRptFinancialAndLetters
+﻿' Module Name: Form_frmRptFinancialAndLetters
 ' Module Type: Document Module
 ' Lines of Code: 1310
-' Extracted: 1/29/2026 4:12:26 PM
+' Extracted: 2026-02-04 13:03:35
 
 Option Compare Database
 Option Explicit
 
 Public ExportFileName As String, Loc As String, RetValue As Variant, CommandLine As String
-Private MRSelectedMonth As String, MRSelectedYear As String, ErrorOccurred As Boolean, ReportName As String
+Private MRSelectedMonth As String, MRSelectedYear As String, ErrorOccurred As Boolean, reportName As String
 Private Const MAX_PATH As Long = 260
 
 Dim SigOnFileClientIndexedName As Variant
@@ -221,7 +221,7 @@ Private Sub GPMonthlyEntries_Click()
 End Sub
 
 Private Sub GUARDIANINFORMATIONAllClients_Click()
-    ReportName = "ltrGUARDIANINFOAllClients"
+    reportName = "ltrGUARDIANINFOAllClients"
     Call DropTempTables
     TILLDataBase.Execute "SELECT tblPeopleFamily.*, tblPeopleClientsDemographics.RepPayeeIsTILL INTO temptbl " & _
         "FROM (((((tblPeople LEFT JOIN tblPeopleFamily ON tblPeople.IndexedName = tblPeopleFamily.IndexedName) LEFT JOIN tblPeopleClientsDemographics ON tblPeopleFamily.ClientIndexedName = tblPeopleClientsDemographics.IndexedName) LEFT JOIN tblPeopleClientsCLOServices ON tblPeopleClientsDemographics.IndexedName = tblPeopleClientsCLOServices.IndexedName) LEFT JOIN tblPeopleClientsIndividualSupportServices ON tblPeopleClientsDemographics.IndexedName = tblPeopleClientsIndividualSupportServices.IndexedName) LEFT JOIN tblPeopleClientsResidentialServices ON tblPeopleClientsDemographics.IndexedName = tblPeopleClientsResidentialServices.IndexedName) LEFT JOIN tblPeopleClientsSHCServices ON tblPeopleClientsDemographics.IndexedName = tblPeopleClientsSHCServices.IndexedName " & _
@@ -248,7 +248,7 @@ Private Sub GUARDIANINFORMATIONAllClients_Click()
 End Sub
 
 Private Sub GuardSelectClient_AfterUpdate()
-    ReportName = "ltrGUARDIANINFO"
+    reportName = "ltrGUARDIANINFO"
     Call DropTempTables
     SelectedClientIndexedName = DLookup("IndexedName", "AllClients", "ReverseDisplayName = """ & GuardSelectClient & """")
     SelectedFirstName = DLookup("FirstName", "AllClients", "ReverseDisplayName = """ & GuardSelectClient & """")
@@ -259,7 +259,7 @@ Private Sub GuardSelectClient_AfterUpdate()
         "ORDER BY tblPeopleFamily.IndexedName;", dbSeeChanges: Call BriefDelay
     GuardianIndexedName = DLookup("IndexedName", "temptbl", "ClientIndexedName=""" & SelectedClientIndexedName & """")
     If Len(SelectedClientIndexedName) > 0 Then
-        Call ExecReport(ReportName)
+        Call ExecReport(reportName)
     Else
         MsgBox "This individual has no guardians.  Form cannot be created.", vbOKOnly, "Error!"
     End If
@@ -267,8 +267,8 @@ Private Sub GuardSelectClient_AfterUpdate()
 End Sub
 
 Private Sub IFCompletelyBlank_Click()
-    If ABILetter Then ReportName = "ltrINDIVFINANCESCOMPLETELYBLANKABI" Else ReportName = "ltrINDIVFINANCESCOMPLETELYBLANK"
-    Call ExecReport(ReportName)
+    If ABILetter Then reportName = "ltrINDIVFINANCESCOMPLETELYBLANKABI" Else reportName = "ltrINDIVFINANCESCOMPLETELYBLANK"
+    Call ExecReport(reportName)
     Call DropTempTables
 End Sub
 
@@ -322,17 +322,17 @@ Private Sub MSAMiscReport_Click()
 End Sub
 
 Private Sub REPPAYEEFOLLOWUPSelectAllClients_Click()
-    ReportName = "ltrREPPAYEEFOLLOWUPTillIsNotRepPayee"
+    reportName = "ltrREPPAYEEFOLLOWUPTillIsNotRepPayee"
     Call BriefDelay
-    Call ExecReport(ReportName)
+    Call ExecReport(reportName)
 End Sub
 
 Private Sub REPPAYEEFOLLOWUPSelectCLient_AfterUpdate()
-    ReportName = "ltrREPPAYEEFOLLOWUPSelectedClient"
+    reportName = "ltrREPPAYEEFOLLOWUPSelectedClient"
     SelectedClientIndexedName = DLookup("IndexedName", "AllClients", "ReverseDisplayName = """ & REPPAYEEFOLLOWUPSelectCLient & """")
     SelectedFirstName = DLookup("FirstName", "AllClients", "ReverseDisplayName = """ & REPPAYEEFOLLOWUPSelectCLient & """")
     SelectedLastName = DLookup("LastName", "AllClients", "ReverseDisplayName = """ & REPPAYEEFOLLOWUPSelectCLient & """")
-    If Len(SelectedClientIndexedName) > 0 Then Call ExecReport(ReportName)
+    If Len(SelectedClientIndexedName) > 0 Then Call ExecReport(reportName)
     REPPAYEEFOLLOWUPSelectCLient = Null: Me.Refresh: Me.Requery: Me.Repaint
 End Sub
 
@@ -1002,17 +1002,17 @@ Private Sub RCBSelectClient_AfterUpdate()
 End Sub
 
 Private Sub REPPAYEEFEESelectClient_AfterUpdate()
-    ReportName = "ltrREPPAYEEFEE"
+    reportName = "ltrREPPAYEEFEE"
     SelectedClientIndexedName = DLookup("IndexedName", "AllClients", "ReverseDisplayName = """ & REPPAYEEFEESelectClient & """")
-    If Len(SelectedClientIndexedName) > 0 Then Call ExecReport(ReportName)
+    If Len(SelectedClientIndexedName) > 0 Then Call ExecReport(reportName)
     REPPAYEEFEESelectClient = Null: Me.Refresh: Me.Requery: Me.Repaint
 End Sub
 
 Private Sub REPPAYEEFEEAllClients_Click()
-    ReportName = "ltrREPPAYEEFEEAllClients"
+    reportName = "ltrREPPAYEEFEEAllClients"
     Call BriefDelay
-    DoCmd.OpenReport ReportName, acViewPreview, , "RepPayeeIsTILL=True"
-    Call LoopUntilClosed(ReportName, 3)
+    DoCmd.OpenReport reportName, acViewPreview, , "RepPayeeIsTILL=True"
+    Call LoopUntilClosed(reportName, 3)
 End Sub
 
 Private Sub REPPAYEES_Click()
@@ -1020,18 +1020,18 @@ Private Sub REPPAYEES_Click()
 End Sub
 
 Private Sub SECT8SelectClient_AfterUpdate()
-    ReportName = "ltrSECTION8AUTH"
+    reportName = "ltrSECTION8AUTH"
     SelectedClientIndexedName = DLookup("IndexedName", "AllClients", "ReverseDisplayName = """ & SECT8SelectCLient & """")
     SelectedFirstName = DLookup("FirstName", "AllClients", "ReverseDisplayName = """ & SECT8SelectCLient & """")
     SelectedLastName = DLookup("LastName", "AllClients", "ReverseDisplayName = """ & SECT8SelectCLient & """")
-    If Len(SelectedClientIndexedName) > 0 Then Call ExecReport(ReportName)
+    If Len(SelectedClientIndexedName) > 0 Then Call ExecReport(reportName)
     SECT8SelectCLient = Null: Me.Refresh: Me.Requery: Me.Repaint
 End Sub
 
 Private Sub IntroSelectClient_AfterUpdate()
     Dim IsRes As Boolean, IsCLO As Boolean
 
-    ReportName = "ltrINTRODUCTION"
+    reportName = "ltrINTRODUCTION"
     Call BuildAllClients(False)
     SelectedClientIndexedName = DLookup("IndexedName", "AllClients", "ReverseDisplayName = """ & IntroSelectClient & """")
     SelectedFirstName = DLookup("FirstName", "AllClients", "ReverseDisplayName = """ & IntroSelectClient & """")
@@ -1045,14 +1045,14 @@ Private Sub IntroSelectClient_AfterUpdate()
     Else
         SelectedLocation = Null
     End If
-    If Len(SelectedClientIndexedName) > 0 Then Call ExecReport(ReportName)
+    If Len(SelectedClientIndexedName) > 0 Then Call ExecReport(reportName)
     IntroSelectClient = Null: Me.Refresh: Me.Requery: Me.Repaint
 End Sub
 
 Private Sub SigOnFileSelectClient_AfterUpdate()
 On Error GoTo ShowMeError
     Dim RepPayee As Variant
-    ReportName = "ltrSIGONFILE"
+    reportName = "ltrSIGONFILE"
     Call DropTempTables
     Select Case SigOnFileSelectClient
         Case "TILL is Rep Payee"
@@ -1074,7 +1074,7 @@ On Error GoTo ShowMeError
                     "WHERE tblPeople.IndexedName= """ & SigOnFileClientIndexedName & """", dbSeeChanges: Call BriefDelay
             End If
     End Select
-    Call BriefDelay: DoCmd.OpenReport ReportName, acViewPreview: Call LoopUntilClosed(ReportName, 3)
+    Call BriefDelay: DoCmd.OpenReport reportName, acViewPreview: Call LoopUntilClosed(reportName, 3)
     SigOnFileSelectClient = Null: SigOnFileSelectClient.SetFocus: SigOnFileClient.Visible = False: SigOnFileClient = Null: Me.Refresh: Me.Requery: Me.Repaint
     Call DropTempTables
     Exit Sub
@@ -1089,7 +1089,7 @@ End Sub
 Private Sub SSASelectClient_AfterUpdate()
     Dim RepPayee As Variant
     
-    ReportName = "ltrSSAWARD"
+    reportName = "ltrSSAWARD"
     Call BuildAllClients(False)
     SelectedClientIndexedName = DLookup("IndexedName", "AllClients", "ReverseDisplayName = """ & SSASelectClient & """")
     SelectedLastName = DLookup("LastName", "AllClients", "ReverseDisplayName = """ & SSASelectClient & """")
@@ -1101,7 +1101,7 @@ Private Sub SSASelectClient_AfterUpdate()
         Exit Sub
     End If
     
-    Call BriefDelay: DoCmd.OpenReport ReportName, acViewPreview: Call LoopUntilClosed(ReportName, 3)
+    Call BriefDelay: DoCmd.OpenReport reportName, acViewPreview: Call LoopUntilClosed(reportName, 3)
     SSASelectClient = Null: Me.Refresh: Me.Requery: Me.Repaint
 End Sub
 

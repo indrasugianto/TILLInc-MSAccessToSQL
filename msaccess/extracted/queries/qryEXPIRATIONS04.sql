@@ -1,5 +1,5 @@
 -- Query Name: qryEXPIRATIONS04
--- Extracted: 2026-01-29 16:09:05
+-- Extracted: 2026-02-04 13:04:22
 
 INSERT INTO [~TempSuperCodes] ( GPCode, GPSuperCode, JobTitle )
 SELECT tblStaff.DEPRTMNT, tblStaff.SUPERVISORCODE_I, tblStaff.JobTitle

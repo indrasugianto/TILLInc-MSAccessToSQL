@@ -1,7 +1,7 @@
-' Module Name: Report_rptEXPIRATIONDATES
+﻿' Module Name: Report_rptEXPIRATIONDATES
 ' Module Type: Document Module
 ' Lines of Code: 19
-' Extracted: 1/29/2026 4:12:25 PM
+' Extracted: 2026-02-04 13:03:35
 
 Option Compare Database
 Option Explicit
@@ -21,3 +21,4 @@ Private Sub PageHeaderSection_Format(Cancel As Integer, FormatCount As Integer)
 On Error GoTo 0
     If Department = "Residential Services" And Cluster <= "90" Then ClusterFormatted.Visible = True Else ClusterFormatted.Visible = False
 End Sub
+

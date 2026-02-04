@@ -1,7 +1,7 @@
-' Module Name: Report_ltrINDIVFINANCESBLANKold
+ï»¿' Module Name: Report_ltrINDIVFINANCESBLANKold
 ' Module Type: Document Module
 ' Lines of Code: 64
-' Extracted: 1/29/2026 4:12:27 PM
+' Extracted: 2026-02-04 13:03:36
 
 Option Compare Database
 Option Explicit
@@ -38,21 +38,21 @@ On Error GoTo ShowMeError
         Label124.Visible = False
         RemainingBenefits.Visible = False
         ChargesToIndividuals = "In accordance with 115 CMR 3.05, all individuals will be charged a portion of their recurrent income (RDSI, SSI, SSDI, VA, etc.) not to exceed 75%.  " & _
-            "If an individual receives earned income in addition to recurrent payments, the monthly charge will be an amount equal to " & [WdlPercent] & "% of the individual’s recurrent payments plus an additional 50% of earned income that exceeds $65.00 in that month.  " & _
+            "If an individual receives earned income in addition to recurrent payments, the monthly charge will be an amount equal to " & [WdlPercent] & "% of the individualâ€™s recurrent payments plus an additional 50% of earned income that exceeds $65.00 in that month.  " & _
             "If an individual receives earned income only, the charge will be equal to 50% of earned income that exceeds $65.00 each month.  Applying these rules, the monthly charge will be:"
         Heading1 = "I. Management of Individual Funds"
     ElseIf WorkingABI Then
         Label124.Visible = True
         RemainingBenefits.Visible = True
         ChargesToIndividuals = "In accordance with 115 CMR 3.05, all individuals will be charged a portion of their recurrent income (RDSI, SSI, SSDI, VA, etc.) not to exceed 75% with the provision that the individual retains at least $200 per month.  " & _
-            "If an individual receives earned income in addition to recurrent payments, the monthly charge will be an amount equal to " & [WdlPercent] & "% of the individual’s recurrent payments plus an additional 50% of earned income that exceeds $65.00 in that month.  " & _
+            "If an individual receives earned income in addition to recurrent payments, the monthly charge will be an amount equal to " & [WdlPercent] & "% of the individualâ€™s recurrent payments plus an additional 50% of earned income that exceeds $65.00 in that month.  " & _
             "If an individual receives earned income only, the charge will be equal to 50% of earned income that exceeds $65.00 each month.  Applying these rules, the monthly charge will be:"
         Heading1 = "I. Management of Individual Funds for ABI Clients"
     Else
         Label124.Visible = False
         RemainingBenefits.Visible = False
         ChargesToIndividuals = "In accordance with 115 CMR 3.05, all individuals will be charged a portion of their recurrent income (RDSI, SSI, SSDI, VA, etc.) not to exceed 75%.  " & _
-            "If an individual receives earned income in addition to recurrent payments, the monthly charge will be an amount equal to " & [WdlPercent] & "% of the individual’s recurrent payments plus an additional 50% of earned income that exceeds $65.00 in that month.  " & _
+            "If an individual receives earned income in addition to recurrent payments, the monthly charge will be an amount equal to " & [WdlPercent] & "% of the individualâ€™s recurrent payments plus an additional 50% of earned income that exceeds $65.00 in that month.  " & _
             "If an individual receives earned income only, the charge will be equal to 50% of earned income that exceeds $65.00 each month.  Applying these rules, the monthly charge will be:"
         Heading1 = "I. Management of Individual Funds"
     End If

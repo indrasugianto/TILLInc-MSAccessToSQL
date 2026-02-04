@@ -16,8 +16,8 @@ except ImportError:
     import win32com.client
 
 # Configuration
-DATABASE_PATH = r"c:\GitHub\TILLInc-MSAccessToSQL\msaccess\TILLDB_V9.14_20260128 - WEB.accdb"
-OUTPUT_DIR = r"c:\GitHub\TILLInc-MSAccessToSQL\extracted"
+DATABASE_PATH = r"c:\GitHub\TILLInc-MSAccessToSQL\msaccess\TILLDB_V9.14_20260203d - WEB.accdb"
+OUTPUT_DIR = r"c:\GitHub\TILLInc-MSAccessToSQL\msaccess\extracted"
 
 # Create output directories
 queries_dir = Path(OUTPUT_DIR) / "queries"

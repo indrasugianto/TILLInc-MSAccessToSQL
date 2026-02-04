@@ -14,8 +14,8 @@ except ImportError:
     import win32com.client
 
 # Configuration
-DATABASE_PATH = r"c:\GitHub\TILLInc-MSAccessToSQL\msaccess\TILLDB_V9.14_20260128 - WEB.accdb"
-OUTPUT_DIR = r"c:\GitHub\TILLInc-MSAccessToSQL\extracted"
+DATABASE_PATH = r"c:\GitHub\TILLInc-MSAccessToSQL\msaccess\TILLDB_V9.14_20260203d - WEB.accdb"
+OUTPUT_DIR = r"c:\GitHub\TILLInc-MSAccessToSQL\msaccess\extracted"
 
 # Create output directories
 queries_dir = Path(OUTPUT_DIR) / "queries"
@@ -92,10 +92,10 @@ try:
                 'file': f"{safe_filename}.sql"
             })
             
-            print(f"  ✓ Extracted: {query_name}")
+            print(f"  [OK] Extracted: {query_name}")
             
         except Exception as e:
-            print(f"  ✗ Error extracting query '{query_name}': {e}")
+            print(f"  [ERROR] Error extracting query '{query_name}': {e}")
     
     print(f"\nTotal Queries Extracted: {query_count}")
     
@@ -156,12 +156,12 @@ try:
                     'file': f"{safe_filename}.vba"
                 })
                 
-                print(f"  ✓ Extracted: {module_name} ({module_type_name}) - {line_count} lines")
+                print(f"  [OK] Extracted: {module_name} ({module_type_name}) - {line_count} lines")
             else:
                 print(f"  - Skipped: {module_name} (empty)")
                 
     except Exception as e:
-        print(f"\n⚠ Warning: Could not access VBA project")
+        print(f"\n[WARNING] Warning: Could not access VBA project")
         print(f"  Error: {e}")
         print("  The database may be password protected or VBA may not be accessible.")
     
@@ -213,7 +213,7 @@ try:
     with open(report_path, 'w', encoding='utf-8') as f:
         f.write(summary)
     
-    print(f"\n✓ Summary report saved to: {report_path}")
+    print(f"\n[OK] Summary report saved to: {report_path}")
     
     # Close database
     access.CloseCurrentDatabase()
@@ -228,7 +228,7 @@ try:
     print(f"  - Reports: {reports_dir}")
     
 except Exception as e:
-    print(f"\n❌ ERROR during extraction: {e}")
+    print(f"\nERROR during extraction: {e}")
     import traceback
     traceback.print_exc()
     sys.exit(1)
@@ -247,4 +247,4 @@ finally:
     except:
         pass
 
-print("\n✓ Done!")
+print("\n[OK] Done!")

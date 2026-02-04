@@ -1,5 +1,5 @@
 -- Query Name: qryLoadPhoneDirectory
--- Extracted: 2026-01-29 16:09:05
+-- Extracted: 2026-02-04 13:04:22
 
 INSERT INTO tblPhoneDirectory ( Department, Location, LocationDetail, LastName, FirstName, EmailAddress, JobTitle, InternalExtension, HasPhoneOnDesktop, ExternalPhoneNumber )
 SELECT tblPeople.Department, tblPeople.OfficeCityTown AS Location, tblPeople.OfficeLocationName AS LocationDetail, tblPeople.LastName, tblPeople.FirstName, tblPeople.EmailAddress, tblPeople.StaffTitle AS JobTitle, tblPeople.DID AS InternalExtension, tblPeople.HasPhoneOnDesktop, tblPeople.StaffExtPhone AS ExternalPhoneNumber

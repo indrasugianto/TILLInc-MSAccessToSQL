@@ -1,5 +1,5 @@
 -- Query Name: qryEXPIRATIONS05
--- Extracted: 2026-01-29 16:09:05
+-- Extracted: 2026-02-04 13:04:22
 
 SELECT tblStaffSkills.* INTO tempstaffskills
 FROM tblStaff LEFT JOIN tblStaffSkills ON tblStaff.EMPLOYID = tblStaffSkills.EMPID_I

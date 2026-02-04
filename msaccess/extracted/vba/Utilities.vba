@@ -1,7 +1,7 @@
-' Module Name: Utilities
+﻿' Module Name: Utilities
 ' Module Type: Standard Module
 ' Lines of Code: 232
-' Extracted: 1/29/2026 4:12:28 PM
+' Extracted: 2026-02-04 13:03:36
 
 Option Compare Database
 Option Explicit

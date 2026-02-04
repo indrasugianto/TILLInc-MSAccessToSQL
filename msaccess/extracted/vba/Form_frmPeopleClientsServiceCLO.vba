@@ -1,7 +1,7 @@
-' Module Name: Form_frmPeopleClientsServiceCLO
+﻿' Module Name: Form_frmPeopleClientsServiceCLO
 ' Module Type: Document Module
 ' Lines of Code: 221
-' Extracted: 1/29/2026 4:12:26 PM
+' Extracted: 2026-02-04 13:03:35
 
 Option Compare Database
 Option Explicit
@@ -223,3 +223,4 @@ Private Sub WaitListSection8Date_AfterUpdate()
         WaitListSection8Date.SetFocus
     End If
 End Sub
+

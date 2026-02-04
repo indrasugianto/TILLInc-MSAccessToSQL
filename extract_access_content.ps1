@@ -1,7 +1,7 @@
 # Script to extract queries and VBA code from MS Access database
 param(
-    [string]$DatabasePath = "c:\GitHub\TILLInc-MSAccessToSQL\msaccess\TILLDB_V9.14_20260128 - WEB.accdb",
-    [string]$OutputDir = "c:\GitHub\TILLInc-MSAccessToSQL\extracted"
+    [string]$DatabasePath = "c:\GitHub\TILLInc-MSAccessToSQL\msaccess\TILLDB_V9.14_20260203d - WEB.accdb",
+    [string]$OutputDir = "c:\GitHub\TILLInc-MSAccessToSQL\msaccess\extracted"
 )
 
 # Create output directories

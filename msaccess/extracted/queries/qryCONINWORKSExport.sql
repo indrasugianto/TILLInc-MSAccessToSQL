@@ -1,5 +1,5 @@
 -- Query Name: qryCONINWORKSExport
--- Extracted: 2026-01-29 16:09:05
+-- Extracted: 2026-02-04 13:04:21
 
 UPDATE [~CONINWORKSSummary] SET [~CONINWORKSSummary].FY = [Forms]![frmMainMenu]![SelectFY], [~CONINWORKSSummary].NumLocations = DCount("ContractID","qryCONINWORKS","ContractID=""" & [~CONINWORKSSummary].[ContractID] & """"), [~CONINWORKSSummary].DDSMaxObligation = DLookUp("MaximumObligation","qryCurrentFYContracts","ContractID=""" & [~CONINWORKSSummary].[ContractID] & """"), [~CONINWORKSSummary].Units = DLookUp("TotalUnits","qryCurrentFYContracts","ContractID=""" & [~CONINWORKSSummary].[ContractID] & """"), [~CONINWORKSSummary].BillingRate = DLookUp("UnitRate","tblContractsBillingBook","ContractID=""" & [~CONINWORKSSummary].[ContractID] & """"), [~CONINWORKSSummary].NumClients = DLookUp("TotalClients","qryCurrentFYContracts","ContractID=""" & [~CONINWORKSSummary].[ContractID] & """"), [~CONINWORKSSummary].FundingSource = DLookUp("FundingSource","qryCONINWORKS","ContractID=""" & [~CONINWORKSSummary].[ContractID] & """"), [~CONINWORKSSummary].ContractUnit = DLookUp("Units","tblContracts","ContractID=""" & [~CONINWORKSSummary]![ContractID] & """"), [~CONINWORKSSummary].AccountingStaff = DLookUp("AccountingStaff","tblContracts","ContractID=""" & [~CONINWORKSSummary]![ContractID] & """");
 

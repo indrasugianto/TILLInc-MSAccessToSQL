@@ -1,7 +1,7 @@
-' Module Name: Form_frmMaintMonthlyMaster
+﻿' Module Name: Form_frmMaintMonthlyMaster
 ' Module Type: Document Module
 ' Lines of Code: 1038
-' Extracted: 1/29/2026 4:12:23 PM
+' Extracted: 2026-02-04 13:03:35
 
 Option Compare Database
 Option Explicit
@@ -1040,3 +1040,4 @@ Private Sub RejectChanges_Click()
         DoCmd.Close
     End If
 End Sub
+

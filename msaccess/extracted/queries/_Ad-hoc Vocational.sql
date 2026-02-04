@@ -1,5 +1,5 @@
 -- Query Name: ~Ad-hoc Vocational
--- Extracted: 2026-01-29 16:09:06 (ADO Method)
+-- Extracted: 2026-02-04 13:04:22 (ADO Method)
 
 SELECT tblPeople.IndexedName, tblPeople.Salutation, tblPeople.FirstName, tblPeople.LastName, tblPeople.MailingAddress, tblPeople.MailingCity, tblPeople.MailingState, tblPeople.MailingZIP
 FROM tblPeople INNER JOIN tblPeopleClientsVocationalServices ON tblPeople.IndexedName = tblPeopleClientsVocationalServices.IndexedName

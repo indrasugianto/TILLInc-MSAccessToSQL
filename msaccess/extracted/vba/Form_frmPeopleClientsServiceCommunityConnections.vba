@@ -1,7 +1,7 @@
-' Module Name: Form_frmPeopleClientsServiceCommunityConnections
+﻿' Module Name: Form_frmPeopleClientsServiceCommunityConnections
 ' Module Type: Document Module
 ' Lines of Code: 44
-' Extracted: 1/29/2026 4:12:23 PM
+' Extracted: 2026-02-04 13:03:35
 
 Option Compare Database
 Option Explicit

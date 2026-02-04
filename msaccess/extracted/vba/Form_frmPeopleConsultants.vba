@@ -1,7 +1,7 @@
-' Module Name: Form_frmPeopleConsultants
+﻿' Module Name: Form_frmPeopleConsultants
 ' Module Type: Document Module
 ' Lines of Code: 62
-' Extracted: 1/29/2026 4:12:24 PM
+' Extracted: 2026-02-04 13:03:35
 
 Option Compare Database
 Option Explicit
@@ -64,3 +64,4 @@ Private Sub SpringboardGroupCode3_AfterUpdate()
     End If
     Call UpdateChangeLog("ConsultantSpringboardGroupCode3", SpringboardGroupCode3)
 End Sub
+

@@ -1,7 +1,7 @@
-' Module Name: GlobalVariables
+﻿' Module Name: GlobalVariables
 ' Module Type: Standard Module
 ' Lines of Code: 81
-' Extracted: 1/29/2026 4:12:28 PM
+' Extracted: 2026-02-04 13:03:36
 
 Option Compare Database
 Option Explicit
@@ -83,3 +83,4 @@ Public Sub InitializeTriggers()
     Trig_Indiv_SPDA_Red = DLookup("Red", "catExpirationTriggers", "Section='Individuals' AND FieldName='DateSignaturesDueBy'"): Trig_Indiv_SPDA_Green = DLookup("Green", "catExpirationTriggers", "Section='Individuals' AND FieldName='DateSignaturesDueBy'")
     ExpMissingCalculated = DateValue("1900-01-01"): ExpOptionalCalculated = DateValue("1900-01-02"): ExpNACalculated = DateValue("1900-01-03")
 End Sub
+

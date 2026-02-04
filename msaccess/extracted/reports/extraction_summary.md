@@ -1,17 +1,17 @@
-# MS Access Database Extraction Report (Initial Run)
+# MS Access Database Extraction Report
 
-**Database:** `TILLDB_V9.14_20260128 - WEB.accdb`  
-**Extraction Date:** 2026-01-29 16:09:06
+**Database:** `c:\GitHub\TILLInc-MSAccessToSQL\msaccess\TILLDB_V9.14_20260203d - WEB.accdb`  
+**Extraction Date:** 2026-02-04 13:04:22
 
-> **Note:** This report is from the *initial* extraction (tables and queries only). For the full extraction including 144 VBA modules, see [COMPLETE_EXTRACTION_SUMMARY.md](COMPLETE_EXTRACTION_SUMMARY.md).
-
-## Connection
-- **Backend:** Azure SQL (tillsqlserver.database.windows.net). Configure credentials in project `.env`; see root `.env.example`.
+## Connection Information
+- **Server:** tillsqlserver.database.windows.net
+- **User:** tillsqladmin
+- **Database Type:** Azure SQL Database
 
 ## Summary
-- **Total Tables Extracted:** 47
-- **Total Queries Extracted:** 166
-- **VBA Modules:** Not extracted in this run (requires MS Access application; see COMPLETE_EXTRACTION_SUMMARY for full extraction)
+- **Total Tables Extracted:** 48
+- **Total Queries Extracted:** 167
+- **VBA Modules:** Not extracted (requires MS Access application)
 
 ## Tables Extracted
 
@@ -32,6 +32,7 @@
 | qrySECTION8 | VIEW | 27 | qrySECTION8_schema.txt |
 | qrySECTION8_Original | VIEW | 27 | qrySECTION8_Original_schema.txt |
 | qrySTAFFWITHNOSKILLS | VIEW | 7 | qrySTAFFWITHNOSKILLS_schema.txt |
+| qrySTAFFWITHNOSKILLS_Original | VIEW | 7 | qrySTAFFWITHNOSKILLS_Original_schema.txt |
 | qrytblContracts | VIEW | 20 | qrytblContracts_schema.txt |
 | qrytblContractsAmendments | VIEW | 24 | qrytblContractsAmendments_schema.txt |
 | qrytblContractsBillingBook | VIEW | 48 | qrytblContractsBillingBook_schema.txt |
@@ -207,6 +208,7 @@
 | qrySECTION8 | qrySECTION8.sql |
 | qrySECTION8_Original | qrySECTION8_Original.sql |
 | qrySTAFFWITHNOSKILLS | qrySTAFFWITHNOSKILLS.sql |
+| qrySTAFFWITHNOSKILLS_Original | qrySTAFFWITHNOSKILLS_Original.sql |
 | qrytblContracts | qrytblContracts.sql |
 | qrytblContractsAmendments | qrytblContractsAmendments.sql |
 | qrytblContractsBillingBook | qrytblContractsBillingBook.sql |
